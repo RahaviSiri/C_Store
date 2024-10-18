@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { assets } from '../../public/assets/assets';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Address = ({ street, city, state, zip }) => {
   return (
@@ -54,7 +57,7 @@ const EditProfileForm = ({ customer, onSave }) => {
       </div>
 
       {/* Email Field */}
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <label className="text-gray-600">Email:</label>
         <input
           type="email"
@@ -63,7 +66,7 @@ const EditProfileForm = ({ customer, onSave }) => {
           onChange={handleChange}
           className="p-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-      </div>
+      </div> */}
 
       {/* Address Fields */}
       <div className="flex flex-col">
@@ -120,6 +123,40 @@ const EditProfileForm = ({ customer, onSave }) => {
 };
 
 const Profile = () => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
+      console.log(token);
+      if (!token) {
+        // No token found, redirect to login page
+        navigate('/Login');
+        return;
+      }
+
+      try {
+        // Verify token with backend
+        await axios.post('http://localhost:3001/authentication', {
+          
+            authorization: token
+          
+        });
+        
+        // Token is valid, continue to stay on the page
+        
+      } catch (error) {
+        // If error, token is invalid or expired, redirect to login page
+        console.error('Invalid token, redirecting to login:', error);
+        navigate('/Login');
+      }
+    };
+
+    checkToken(); // Call the token check function when page loads
+  }, [navigate]); // Dependency array to run on page load
+
+
   const [customer, setCustomer] = useState({
     firstName: 'John',
     lastName: 'Doe',
@@ -130,7 +167,7 @@ const Profile = () => {
       state: 'IL',
       zip: '62704',
     },
-    img: assets.Person,
+    //img: assets.Person,
   });
 
   const [isEditing, setIsEditing] = useState(false);
