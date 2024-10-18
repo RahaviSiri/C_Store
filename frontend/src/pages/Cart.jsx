@@ -6,7 +6,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const userId = 1;
+  const userId = 1; // Ensure this matches the user ID in your database
 
   useEffect(() => {
     fetchCartItems();
@@ -17,6 +17,7 @@ const Cart = () => {
       setLoading(true);
       const response = await fetch(`http://localhost:3000/cart/${userId}`);
       const data = await response.json();
+      console.log('Fetched Cart Items:', data); // Debug log
       setItems(data);
       fetchCartTotal();
     } catch (error) {
@@ -29,7 +30,7 @@ const Cart = () => {
 
   useEffect(() => {
     if (items.length > 0) {
-      const totalAmount = items.reduce((acc, item) => acc + (typeof item.price === 'number' ? item.price : 0) * item.quantity, 0);
+      const totalAmount = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
       setTotal(totalAmount);
     }
   }, [items]);
@@ -64,17 +65,12 @@ const Cart = () => {
   const fetchCartTotal = async () => {
     try {
       const response = await fetch(`http://localhost:3000/cart/total/${userId}`);
-      if (!response.ok) {
-        const errorText = await response.text(); // Get the error response
-        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
-      }
       const data = await response.json();
       setTotal(data.total);
     } catch (error) {
       console.error('Error fetching total price:', error);
     }
   };
-  
 
   if (loading) {
     return <div className="text-center">Loading cart items...</div>;
@@ -84,15 +80,14 @@ const Cart = () => {
     return <div className="text-center text-red-600">{error}</div>;
   }
 
-
   return (
     <div className="flex flex-col items-center w-full max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg m-5 border border-gray-200">
       <h2 className="text-4xl font-bold text-purple-700 text-center mb-6">Shopping Cart</h2>
       {items.length === 0 ? (
         <div className="text-center text-xl text-gray-600">Your cart is empty.</div>
       ) : (
-        Array.isArray(items) && items.map((item, index) => (
-          <div key={`${item.product_id}-${index}`} className=" w-full bg-gray-50 mb-4 p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-300">
+        items.map((item) => (
+          <div key={item.product_id} className="w-full bg-gray-50 mb-4 p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-300">
             <div className="flex items-center">
               <button onClick={() => decrementCartItem(item.product_id)} className="bg-purple-200 text-purple-600 p-2 rounded-md mr-2 hover:bg-purple-300 transition duration-200">-</button>
               <span className="mx-2 font-semibold">{item.quantity}</span>
