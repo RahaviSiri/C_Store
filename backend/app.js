@@ -11,19 +11,19 @@ const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: 'http://localhost:5174', 
+  origin: 'http://localhost:5173', 
   credentials: true 
 };
 
 app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
-app.use(session({
+/* app.use(session({
   secret: process.env.SESSION_SECRET, 
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } 
-}));
+}));  */
 
 
 // Database connection (MySQL pool setup)
