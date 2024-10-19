@@ -1,0 +1,51 @@
+.home-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin-bottom: 20px;
+  }
+  
+  .report-box {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .report-box:hover {
+    transform: scale(1.05);
+    background-color: #e0e0e0;
+  }
+  
+  /* src/components/Home.css */
+
+.report-boxes {
+  display: flex; /* Use flexbox for layout */
+  flex-wrap: wrap; /* Allow items to wrap onto the next line */
+  justify-content: space-between; /* Space boxes evenly */
+  margin: 20px 0; /* Add some margin for spacing */
+}
+
+.report-box {
+  flex: 1 1 30%;
+  margin: 10px; 
+  padding: 20px;
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  text-align: center; 
+  background-color: #f9f9f9; 
+  transition: transform 0.3s;
+}
+
+.report-box:hover {
+  transform: scale(1.05); 
+}
