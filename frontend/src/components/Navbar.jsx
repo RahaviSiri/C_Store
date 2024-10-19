@@ -35,7 +35,7 @@ const Navbar = () => {
       (item) => item.type.toLowerCase() === searchQuery.toLowerCase() 
     );
     if (foundProduct) {
-      navigate(`/product1/${foundProduct.categoryId}`); // Use backticks for template literals
+      navigate(`/product1/${foundProduct.categoryId}`); 
     } else {
       navigate("/NotFound");
     }
