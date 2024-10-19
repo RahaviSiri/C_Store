@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const session = require("express-session");
 require('dotenv').config();
 
 const app = express();
@@ -18,12 +17,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
-/* app.use(session({
-  secret: process.env.SESSION_SECRET, 
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } 
-}));  */
 
 
 // Database connection (MySQL pool setup)
@@ -170,7 +163,7 @@ app.get('/cart/count/:userId', (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error fetching total count:", err);
-        return res.status(500).send("Error fetching total count.");
+        return res.status(500).json({ error: "Error fetching total count." });
       }
       res.json({ count: results[0].count || 0 }); // Send the count value
     }
