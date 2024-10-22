@@ -14,10 +14,12 @@ const authenticateJWT = (req, res, next) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid token' });
     }
-
-    if(!userService.checkIfUserExists(user.email)){
+    
+    if(!userService.checkIfUserExistsByEmail(user.email)){
+      console.log(user);
       return res.status(404).json({ message: 'Invalid token, user not found!' });
     }
+    res.status(200).json({ message: 'Authentication Successful!'});
   });
 };
 
