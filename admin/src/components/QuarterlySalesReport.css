@@ -1,0 +1,31 @@
+.quarterly-sales-report-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .year-selection {
+    margin-bottom: 20px;
+  }
+  
+  .sales-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .sales-data-table th,
+  .sales-data-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .sales-data-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .charts-container {
+    margin-top: 20px;
+  }
+  
