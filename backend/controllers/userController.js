@@ -38,7 +38,9 @@ exports.changeUserInfo = async (req, res) => {
 exports.getUserInfo = async (req, res) => {
   try {
     const token = req.body.token;
+    console.log(token);
     const id = await userService.getUserID(token);
+    console.log(id);
     const [userInfo] = await userService.getUserInfo(id);
     res.status(201).json({message: 'User Info Fetched', userInfo});
   } catch (error) {

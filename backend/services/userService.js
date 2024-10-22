@@ -97,7 +97,7 @@ exports.updateUserInfo = async (id, firstName, lastName, streetAddress, city, st
 
 exports.getUserInfo = async (id) => {
   const getUserSql = 'CALL getCustomerInfoById(?)';
-  const [userInfo] = await db.execute(getUserSql, id);
+  const [userInfo] = await db.execute(getUserSql, [id]);
   return userInfo;
 }
 
