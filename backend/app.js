@@ -158,7 +158,7 @@ app.get('/cart/count/:userId', (req, res) => {
   const userId = req.params.userId;
 
   pool.query(
-    "SELECT COUNT(id) AS count FROM cart_items WHERE user_id = ?",
+    "SELECT SUM(quantity) AS count FROM cart_items WHERE user_id = ?",
     [userId],
     (err, results) => {
       if (err) {
