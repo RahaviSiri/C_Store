@@ -11,7 +11,7 @@ const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: 'http://localhost:5173', 
+  origin: 'http://localhost:5174', 
   credentials: true 
 };
 
@@ -65,21 +65,21 @@ const productRoutes = require('./routes/productRoutes');
 app.use('/', productRoutes);
 
 // Add cart item
+// Add item to cart using stored procedure
 app.post('/cart/add', (req, res) => {
   const { user_id, product_id, product_name, quantity, price } = req.body;
 
-  pool.query(
-    "INSERT INTO cart_items (user_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + 1",
-    [user_id, product_id, product_name, quantity, price],
-    (err, result) => {
-      if (err) {
-        console.error("Error adding item to cart:", err);
-        return res.status(500).send("Error adding item to cart.");
-      }
-      res.send("Item added to cart successfully.");
+  const query = `CALL addToCart(?, ?, ?, ?, ?)`;
+
+  pool.query(query, [user_id, product_id, product_name, quantity, price], (err, result) => {
+    if (err) {
+      console.error("Error calling addToCart procedure:", err);
+      return res.status(500).send("Error adding item to cart.");
     }
-  );
+    res.send("Item added to cart successfully.");
+  });
 });
+
 
 // Get cart items
 app.get('/cart/:userId', (req, res) => {
@@ -201,5 +201,5 @@ app.post('/contact/add', (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log('Server running at http://localhost:${PORT}');
+  console.log(`Server running at http://localhost:${PORT}`);
 });
