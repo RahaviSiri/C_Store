@@ -20,15 +20,44 @@ const EditProfileForm = ({ customer, onSave }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  
+    // Check if the field belongs to the address object
+    if (name in formData.address) {
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [name]: value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     onSave(formData); // Pass the entire updated form data to save
+    const token = localStorage.getItem('token');
+
+    const update_response = await axios.post("http://localhost:3001/changeUserInfo",
+      {
+        token:token,
+        firstName:formData.firstName,
+        lastName:formData.lastName,
+        streetAddress:formData.address.street,
+        city:formData.address.city,
+        state:formData.address.state,
+        zipCode:formData.address.zip,
+        phoneNumber:formData.phoneNumber
+      }
+    );
+
+    console.log(update_response);
+
   };
 
   return (
@@ -113,6 +142,19 @@ const EditProfileForm = ({ customer, onSave }) => {
         />
       </div>
 
+      {/* Phone Number */}
+      <div className="flex flex-col">
+        <label className="text-gray-600">Phone Number:</label>
+        <input
+          type="tel"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          className="p-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+
       <button
         type="submit"
         className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
@@ -167,6 +209,7 @@ const Profile = () => {
       state: 'IL',
       zip: '62704',
     },
+    phoneNumber: '+94779367923',
     //img: assets.Person,
   });
 
@@ -205,6 +248,8 @@ const Profile = () => {
                 <p><strong>Email:</strong> {customer.email}</p>
                 <h3 className="mt-6 text-lg font-medium text-gray-800"><i className="fa-solid fa-location-dot"></i> Address</h3>
                 <Address {...customer.address} />
+                <br />
+                <p><strong>Phone number:</strong> {customer.phoneNumber}</p>
                 <button
                   onClick={toggleEdit}
                   className="mt-4 w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">

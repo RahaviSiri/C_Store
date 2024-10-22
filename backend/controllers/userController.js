@@ -23,6 +23,29 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.changeUserInfo = async (req, res) => {
+  try {
+    const {token, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber} = req.body;
+    const id = await userService.getUserID(token);
+    console.log(id);
+    await userService.updateUserInfo(id, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber);
+    res.status(200).json({ message: 'Info Update Successful'});
+  } catch (error) {
+    res.status(401).json({ message: 'Failed to Update User Info', error: error.message });
+  }
+}
+
+exports.getUserInfo = async (req, res) => {
+  try {
+    const token = req.body.token;
+    const id = await userService.getUserID(token);
+    const [userInfo] = await userService.getUserInfo(id);
+    res.status(201).json({message: 'User Info Fetched', userInfo});
+  } catch (error) {
+    res.status(401).json({ message: 'Failed to Fetch User Info', error: error.message });
+  }
+}
+
 // Destructuring req.body:
 
 // const { firstname, lastname, email, password } = req.body;

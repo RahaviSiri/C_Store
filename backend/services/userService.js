@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
+//const { use } = require('../routes/userRoutes');
 
 // Signup logic: create a new user and hash the password
 exports.signup = async (firstname, lastname, email, password) => {
 
   // If a user with the email already exists, return an error message
-  if (await this.checkIfUserExists(email)) {
+  if (await this.checkIfUserExistsByEmail(email)) {
     throw new Error('User123 with this email already exists');
   }
   else{
@@ -22,7 +23,7 @@ exports.signup = async (firstname, lastname, email, password) => {
   const [user] = await db.execute(sqlRetrieve, [email]);
 
   // Generate JWT token for the newly registered user
-  const token = jwt.sign({ id: user[0].customer_id, email: user[0].email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+  const token = jwt.sign({ user_id: user[0].customer_id, email: user[0].email }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
   return token;
   }
@@ -33,28 +34,72 @@ exports.login = async (email, password) => {
   
   const sql = 'SELECT * FROM registered_customer WHERE email = ?';
   const [user] = await db.execute(sql, [email]);
-
+  //console.log(user);
   if (!user[0]) throw new Error('User not found');
   
   const passwordMatch = await bcrypt.compare(password, user[0].password_hash);
   if (!passwordMatch) throw new Error('Invalid credentials');
 
-  const token = jwt.sign({ id: user[0].id, email: user[0].email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+  const token = jwt.sign({ user_id: user[0].customer_id, email: user[0].email }, process.env.JWT_SECRET, { expiresIn: '24h' });
   return token;
 };
 
 
-exports.checkIfUserExists = async (email) => {
+exports.checkIfUserExistsByEmail = async (email) => {
   
   // The function checks if the user exists by running a SELECT query on the registered_customer table with the provided email.
   const sql = 'SELECT * FROM registered_customer WHERE email = ?';
   const [user] = await db.execute(sql, [email]);
+  //console.log(user);
+  if (user.length > 0) return true;
+  else return false;
+  
+};
+
+exports.checkIfUserExistsByID = async (id) => {
+  
+  // The function checks if the user exists by running a SELECT query on the registered_customer table with the provided email.
+  const sql = 'SELECT * FROM registered_customer WHERE customer_id = ?';
+  const [user] = await db.execute(sql, [id]);
+
+  //console.log(user);
   
   if (user.length > 0) return true;
   else return false;
   
 };
 
+exports.getUserID = async (token) => {
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token' });
+    }
+    //console.log(user);
+    //sconst decoded = jwt.decode(token);
+    //console.log(decoded);
+    if(!this.checkIfUserExistsByID(user.user_id)){
+      return res.status(404).json({ message: 'Invalid token, user not found!' });
+    }
+    //console.log(user);
+  });
+  const decoded = jwt.decode(token);
+  console.log(decoded.user_id);
+  const result = await decoded.user_id;
+  return result;
+}
+
+exports.updateUserInfo = async (id, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber) => {
+  console.log(id, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber);
+  const updateSql = 'CALL updateCustomerInfo(?,?,?,?,?,?,?,?)';
+  await db.execute(updateSql,[id,firstName,lastName,streetAddress,city,state,zipCode, phoneNumber]);
+}
+
+exports.getUserInfo = async (id) => {
+  const getUserSql = 'CALL getCustomerInfoById(?)';
+  const [userInfo] = await db.execute(getUserSql, id);
+  return userInfo;
+}
 
 // bcrypt: Used to securely hash passwords. It prevents storing plain-text passwords in the database by using one-way encryption (hashing).
 

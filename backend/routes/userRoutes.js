@@ -7,6 +7,9 @@ const authenticateJWT = require('../middlewares/authMiddleware');
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.post('/authentication', authenticateJWT);
+router.post('/login', userController.changeUserInfo);
+router.post('/changeUserInfo', userController.changeUserInfo);
+router.post('/getUserInfo',userController.getUserInfo);
 
 module.exports = router;
 

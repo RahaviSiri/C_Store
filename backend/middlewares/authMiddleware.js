@@ -15,7 +15,7 @@ const authenticateJWT = (req, res, next) => {
       return res.status(403).json({ message: 'Invalid token' });
     }
 
-    if(!userService.checkIfUserExists(user.email)){
+    if(!userService.checkIfUserExistsByEmail(user.email)){
       return res.status(404).json({ message: 'Invalid token, user not found!' });
     }
   });
