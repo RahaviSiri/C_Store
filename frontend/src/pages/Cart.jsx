@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -101,7 +102,7 @@ const Cart = () => {
       )}
       <div className="flex justify-between w-full mt-6 border-t pt-4 border-gray-300">
         <div className="text-xl font-bold text-purple-800">Total: ${total}</div>
-        <button className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition duration-200">Order</button>
+        <Link to="/checkout" className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition duration-200">Checkout</Link>
       </div>
     </div>
   );

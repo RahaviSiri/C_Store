@@ -25,6 +25,10 @@ import Rating from "./rating.png"
 import ProfilePicIcon from "./ProfilePicIcon.png"
 import Profile from "./profile.png"
 import Person from "./Person.jpg"
+import visa from "./visa.png"
+import gpay from "./gpay.png"
+import mastercard from "./mastercard.png"
+import paypal from "./paypal.png"
 
 export const assets = {
     img1, 
@@ -54,6 +58,10 @@ export const assets = {
     ProfilePicIcon,
     Person,
     Profile,
+    visa,
+    gpay,
+    mastercard,
+    paypal
     
 };
 
