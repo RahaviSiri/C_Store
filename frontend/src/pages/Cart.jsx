@@ -6,6 +6,7 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]); // New state for selected items
 
   const userId = 1; // Ensure this matches the user ID in your database
 
@@ -18,7 +19,7 @@ const Cart = () => {
       setLoading(true);
       const response = await fetch(`http://localhost:3000/cart/${userId}`);
       const data = await response.json();
-      console.log('Fetched Cart Items:', data); // Debug log
+      console.log('Fetched Cart Items:', data); 
       setItems(data);
       fetchCartTotal();
     } catch (error) {
@@ -73,6 +74,16 @@ const Cart = () => {
     }
   };
 
+  const handleCheckboxChange = (itemId) => {
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems.includes(itemId)) {
+        return prevSelectedItems.filter((id) => id !== itemId); 
+      } else {
+        return [...prevSelectedItems, itemId];
+      }
+    });
+  };
+
   if (loading) {
     return <div className="text-center">Loading cart items...</div>;
   }
@@ -89,6 +100,12 @@ const Cart = () => {
       ) : (
         items.map((item) => (
           <div key={item.product_id} className="w-full bg-gray-50 mb-4 p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-300">
+            <input 
+              type="checkbox"
+              checked={selectedItems.includes(item.product_id)} 
+              onChange={() => handleCheckboxChange(item.product_id)} 
+              className="mr-4"
+            />
             <div className="flex items-center">
               <button onClick={() => decrementCartItem(item.product_id)} className="bg-purple-200 text-purple-600 p-2 rounded-md mr-2 hover:bg-purple-300 transition duration-200">-</button>
               <span className="mx-2 font-semibold">{item.quantity}</span>
