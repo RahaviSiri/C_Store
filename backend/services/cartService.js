@@ -68,3 +68,18 @@ exports.getUserID = async (token) => {
     return { message: 'Invalid token' }; // Return error message if token is invalid
   }
 };
+
+exports.incrementItem = async (cart_id, varient_id) => {
+  const sqlInc = 'CALL incrementCartItem(?,?)';
+  db.execute(sqlInc, [cart_id,varient_id]);
+}
+
+exports.decrementItem = async (cart_id, varient_id) => {
+  const sqlInc = 'CALL decrementCartItem(?,?)';
+  db.execute(sqlInc, [cart_id,varient_id]);
+}
+
+exports.deleteItem = async (cart_id, varient_id) => {
+  const sqlInc = 'CALL deleteCartItem(?,?)';
+  db.execute(sqlInc, [cart_id,varient_id]);
+}

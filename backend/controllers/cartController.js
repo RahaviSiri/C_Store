@@ -9,7 +9,8 @@ exports.addToCart = async (req, res) => {
 
 exports.getCartItems = async (req, res) => {
     const token = req.body.token;
-    const id = await cartService.getUserID(token);
+    //const id = await cartService.getUserID(token);
+    const id = 1;
     console.log(id);
     try {
         const cart_id = await cartService.getCartID(id);
@@ -25,15 +26,35 @@ exports.getCartItems = async (req, res) => {
 }
 
 exports.incrementItem = async (req, res) => {
-    const {cart_id, varient_id} = req.body;
+    console.log(req);
+    const {cart_id, variant_id} = req.body;
+    //console.log(cart_id, variant_id);
+    try {
+        const inc = await cartService.incrementItem(cart_id, variant_id);
+        res.status(201).json({message: 'item incremented!'});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to increment item', error: error.message });
+    }
 }
 
 exports.decrementItem = async (req, res) => {
-    const {cart_id, varient_id} = req.body;
+    const {cart_id, variant_id} = req.body;
+    try {
+        const inc = await cartService.decrementItem(cart_id, variant_id);
+        res.status(201).json({message: 'item decremented!'});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to decrement item', error: error.message });
+    }
 }
 
 exports.deleteItem = async (req, res) => {
-    const {cart_id, varient_id} = req.body;
+    const {cart_id, variant_id} = req.body;
+    try {
+        const inc = await cartService.deleteItem(cart_id, variant_id);
+        res.status(201).json({message: 'item deleted!'});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to delete item', error: error.message });
+    }
 }
 
 exports.checkout = async (req, res) => {
