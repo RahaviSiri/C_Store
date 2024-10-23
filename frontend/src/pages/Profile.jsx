@@ -253,7 +253,8 @@ const Profile = () => {
 
   // Display an error message if fetching data failed
   if (error) {
-    return <div>{error}</div>;
+    navigate('/Login');
+    //return <div>{error}</div>;
   }
 
   return (
