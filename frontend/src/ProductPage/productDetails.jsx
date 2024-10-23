@@ -11,6 +11,7 @@ const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [notification, setNotification] = useState(''); // State for notification
 
   useEffect(() => {
     const foundProduct = productsItems.find(item => item._id === id);
@@ -41,31 +42,37 @@ const ProductDetails = () => {
     setSelectedSize(size);
   };
 
-  // New: Handle Add to Cart functionality
   const handleAddToCart = async () => {
     try {
       const cartItem = {
-        user_id: 1, 
+        user_id: 1,
         product_id: product._id,
         product_name: product.name,
-        quantity: 1, 
+        quantity: 1,
         price: product.price,
       };
   
-      // Use the full backend URL
       await axios.post('http://localhost:3000/cart/add', cartItem);
-      alert('Product added to cart!');
+      setNotification('Product added to cart successfully!');
+      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      alert('Failed to add product to cart.');
+      setNotification('Failed to add product to cart.');
+      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
     }
-  };  
+  };
 
-  const ratingValue = product.rating || 0; 
-  const totalStars = 5; 
+  const ratingValue = product.rating || 0;
+  const totalStars = 5;
 
   return (
     <div className='border-t-2 p-7 transition-opacity ease-in duration-500 opacity-100'>
+      {notification && (
+        <div className='bg-green-200 text-green-700 p-3 mb-4 rounded'>
+          {notification}
+        </div>
+      )}
+
       <div className='flex flex-col sm:flex-row'>
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
           <div className='sm:w-[80%]'>

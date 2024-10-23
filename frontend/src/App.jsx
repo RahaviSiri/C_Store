@@ -17,6 +17,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 import Product1 from './products/Product1';
+import Order_history from './pages/Order_history';
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/Order' element={<Order />} />
         <Route path='/Profile' element={<Profile />} />
         <Route path='/NotFound' element={<NotFound/>}/>
+        <Route path='/Order_history' element={<Order_history/>}/>
       </Routes>
       <Footer />
     </div>
