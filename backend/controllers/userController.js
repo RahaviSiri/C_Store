@@ -27,7 +27,7 @@ exports.changeUserInfo = async (req, res) => {
   try {
     const {token, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber} = req.body;
     const id = await userService.getUserID(token);
-    console.log(id);
+    //console.log(id);
     await userService.updateUserInfo(id, firstName, lastName, streetAddress, city, state, zipCode, phoneNumber);
     res.status(200).json({ message: 'Info Update Successful'});
   } catch (error) {
@@ -40,7 +40,7 @@ exports.getUserInfo = async (req, res) => {
     const token = req.body.token;
     console.log(token);
     const id = await userService.getUserID(token);
-    console.log(id);
+    //console.log(id);
     const [userInfo] = await userService.getUserInfo(id);
     res.status(201).json({message: 'User Info Fetched', userInfo});
   } catch (error) {
