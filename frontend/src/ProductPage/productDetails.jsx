@@ -10,6 +10,7 @@ const ProductDetails = () => {
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Selected variant state
   const [sku, setSku] = useState('SKU001'); // For SKU input testing
+  const [SKU, setSKU] = useState('SKU001'); // For SKU input testing
   const [notification, setNotification] = useState(''); // State for notification
   const [quantity, setQuantity] = useState(1); // Quantity selector
   const [loading, setLoading] = useState(false); // Loading state
@@ -134,13 +135,13 @@ const ProductDetails = () => {
           <div className='mt-4'>
             <input 
               type="text" 
-              value={sku} 
-              //onChange={(e) => setSku(e.target.value)} 
+              value={SKU} 
+              onChange={(e) => setSKU(e.target.value)} 
               placeholder="Enter SKU for testing"
               className="border p-2 rounded"
             />
             <button 
-              onClick={() => setSku(sku)} // Use the button to fetch with the current SKU
+              onClick={() => setSku(SKU)} // Use the button to fetch with the current SKU
               className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
             >
               Test SKU
