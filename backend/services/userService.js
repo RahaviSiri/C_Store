@@ -16,7 +16,7 @@ exports.signup = async (firstname, lastname, email, password) => {
   // bcrypt.hash(password, 10) hashes the user's password with a salt value of 10. This makes the password more secure by introducing randomness (the "salt").
   const hashedPassword = await bcrypt.hash(password, 10);
   const sqlInsert = 'INSERT INTO registered_customer (first_name, last_name, email, password_hash, address_id, phone_number) VALUES (?, ?, ?, ?, ?, ?)';
-  await db.execute(sqlInsert, [firstname, lastname, email, hashedPassword, 1, 123456789]);
+  await db.execute(sqlInsert, [firstname, lastname, email, hashedPassword, null, null]);
 
   // Retrieve the newly inserted user to generate a JWT token
   const sqlRetrieve = 'SELECT * FROM registered_customer WHERE email = ?';
