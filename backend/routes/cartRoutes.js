@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');
-const authenticateJWT = require('../middlewares/authMiddleware');
 
 // Define routes for users
 router.post('/addToCart', cartController.addToCart);

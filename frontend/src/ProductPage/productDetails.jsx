@@ -1,69 +1,112 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from "../Context/ShopContext";
 import { useParams } from 'react-router-dom';
-import { assets } from '../../public/assets/assets';
 import axios from 'axios';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { currency, productsItems } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [variants, setVariants] = useState([]);
+  const [selectedVariant, setSelectedVariant] = useState(null); // Selected variant state
+  const [sku, setSku] = useState('SKU001'); // For SKU input testing
   const [notification, setNotification] = useState(''); // State for notification
+  const [quantity, setQuantity] = useState(1); // Quantity selector
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(''); // Error state
 
+  // Fetch product by SKU or by ID
   useEffect(() => {
-    const foundProduct = productsItems.find(item => item._id === id);
-    setProduct(foundProduct);
-    if (foundProduct) {
-      const initialColor = foundProduct.variants[0].color;
-      const initialSize = foundProduct.variants[0].sizes[0].size;
-      setSelectedColor(initialColor);
-      setSelectedSize(initialSize);
-      setSelectedImage(foundProduct.image[initialColor]);
-    }
-  }, [id, productsItems]);
+    const fetchProduct = async () => {
+      try {
+        setLoading(true); // Show loading while fetching data
+        // Make API call to the backend with SKU
+        const productFetchRes = await axios.post("http://localhost:3001/getProduct", { SKU: sku });
+        //console.log(productFetchRes);
+        const foundProduct = productFetchRes.data.product;
+        //console.log(foundProduct);
 
-  if (!product) {
-    return <div className='p-10'>Product not found!</div>;
+        const variantFetchRes = await axios.post("http://localhost:3001/getVariants", {SKU: sku});
+        //console.log(variantFetchRes);
+        const variantList = variantFetchRes.data.variants;
+        //console.log(variantList);
+
+        if (foundProduct) {
+          setProduct(foundProduct);
+          
+          //console.log(foundProduct);
+          //setVariants(foundProduct.variants); // Set the variants dynamically
+          //setSelectedVariant(foundProduct.variants[0]); // Default to the first variant
+        } else {
+          setError('Product not found');
+        }
+
+        if (variantList) {
+          setVariants(variantList); // Set the variants dynamically
+          setSelectedVariant(variantList[0]); // Default to the first variant
+    
+        } else {
+          setError('Variants not found');
+        }
+
+      } catch (err) {
+        console.error('Error fetching:', err);
+        setError('Failed to fetch');
+      } finally {
+        setLoading(false); // Stop loading when the request is complete
+      }
+    };
+
+    fetchProduct(); // Call the function inside useEffect
+  }, [sku]); // Only rerun this effect if the SKU changes
+
+  if (loading) {
+    return <div>Loading product...</div>;
   }
 
-  const handleColorChange = (color) => {
-    setSelectedColor(color);
-    const newVariant = product.variants.find(variant => variant.color === color);
-    if (newVariant) {
-      setSelectedSize(newVariant.sizes[0].size); // Default to the first size
-      setSelectedImage(product.image[color]); // Change image based on selected color
-    }
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+ 
+
+  // Handle variant card selection
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
   };
 
-  const handleSizeChange = (size) => {
-    setSelectedSize(size);
-  };
-
+  // Handle Add to Cart action
   const handleAddToCart = async () => {
+    if (!selectedVariant) return;
+
     try {
       const cartItem = {
-        user_id: 1,
+        user_id: 1, // Assuming user_id is 1 for now
         product_id: product._id,
-        product_name: product.name,
-        quantity: 1,
-        price: product.price,
+        variant_id: selectedVariant.variant_id,
+        quantity,
+        price: selectedVariant.price, // Variant-specific price
       };
-  
-      await axios.post('http://localhost:3000/cart/add', cartItem);
+
+      await axios.post('http://localhost:3001/addToCart', cartItem);
       setNotification('Product added to cart successfully!');
-      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
+      setTimeout(() => setNotification(''), 3000);
     } catch (error) {
       console.error('Error adding product to cart:', error);
       setNotification('Failed to add product to cart.');
-      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
+      setTimeout(() => setNotification(''), 3000);
     }
   };
 
-  const ratingValue = product.rating || 0;
-  const totalStars = 5;
+  if (!product || !variants) {
+    return <div className='p-10'>Product or variants not found!</div>;
+  }
+
+  // console.log(selectedVariant.picture_url);
+  // console.log(product.name);
+  // console.log(product.description);
+  // console.log(variants[0].attributes);
+  // console.log(variants[0].stock);
 
   return (
     <div className='border-t-2 p-7 transition-opacity ease-in duration-500 opacity-100'>
@@ -74,90 +117,89 @@ const ProductDetails = () => {
       )}
 
       <div className='flex flex-col sm:flex-row'>
-        <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
-          <div className='sm:w-[80%]'>
-            <img src={product.image} alt={product.name} className='w-full h-auto mb-3' />
-          </div>
+        <div className='flex-1'>
+        <img 
+          src={selectedVariant ? selectedVariant.picture_url : 'https://images.squarespace-cdn.com/content/v1/58c04c7cb3db2b1cbe0a403b/dce7faef-d29b-4a60-abe5-65c978fd07ef/best-affordable-camera-for-wildlife-photography.JPG?format=1500w'} 
+          alt={product.name} 
+          className='w-[95%] h-auto mb-3 rounded-lg' // Use 'rounded-lg' for rounded corners
+        />
+
         </div>
 
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{product.name}</h1>
-          <div className='flex items-center gap-1 mt-2'>
-            <div className='flex flex-row gap-2 my-1'>
-              {Array.from({ length: totalStars }, (_, index) => (
-                <img 
-                  key={index} 
-                  src={assets.Star} 
-                  alt="" 
-                  className='w-3.5' 
-                  style={{ opacity: index < ratingValue ? 1 : 0.5 }} 
-                />
-              ))}
-            </div>
-          </div>
           <p className='mt-4'>{product.description}</p>
-          <p className='mt-4 text-2xl font-semibold'>{currency} {product.price}</p>
 
+          {/* Display SKU input for testing */}
           <div className='mt-4'>
-            <h3 className='font-bold'>Color:</h3>
-            <div className='flex gap-2 mt-2'>
-              {product.variants.map((variant, index) => (
-                <button
-                  key={index}
-                  className={`px-4 py-2 border rounded ${selectedColor === variant.color ? 'bg-purple-300' : ''}`}
-                  onClick={() => handleColorChange(variant.color)}
-                  aria-label={`Select color ${variant.color}`}
-                >
-                  {variant.color}
-                </button>
-              ))}
+            <input 
+              type="text" 
+              value={sku} 
+              //onChange={(e) => setSku(e.target.value)} 
+              placeholder="Enter SKU for testing"
+              className="border p-2 rounded"
+            />
+            <button 
+              onClick={() => setSku(sku)} // Use the button to fetch with the current SKU
+              className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Test SKU
+            </button>
+          </div>
+
+          {/* Display selected variant price */}
+          <p className='mt-4 text-2xl font-semibold'>
+            {currency} {selectedVariant.price}
+          </p>
+
+          {/* Variant Cards */}
+          <div className='mt-4'>
+            <h3 className='font-bold'>Select Variant:</h3>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2'>
+            {variants.map((variant, index) => (
+              <div 
+                key={index}
+                className={`border p-4 rounded cursor-pointer ${selectedVariant === variant ? 'border-purple-500 bg-purple-100' : 'border-gray-300'}`}
+                onClick={() => handleVariantSelect(variant)}
+              >
+                {variant.attributes ? (
+                  Object.entries(variant.attributes).map(([key, value]) => (
+                    <p key={key}><strong>{key}:</strong> {value}</p>
+                  ))
+                ) : (
+                  <p><strong>Color:</strong> {variant.color}</p>
+                )}
+                <p><strong>Stock:</strong> {variant.stock}</p>
+              </div>
+            ))}
+
             </div>
           </div>
 
+          {/* Quantity Selector */}
           <div className='mt-4'>
-            <h3 className='font-bold'>Size:</h3>
-            <div className='flex gap-2 mt-2'>
-              {product.variants.find(variant => variant.color === selectedColor)?.sizes.map((sizeOption, index) => (
-                <button
-                  key={index}
-                  className={`px-4 py-2 border rounded ${selectedSize === sizeOption.size ? 'bg-purple-300' : ''}`}
-                  onClick={() => handleSizeChange(sizeOption.size)}
-                  aria-label={`Select size ${sizeOption.size}`}
-                >
-                  {sizeOption.size}
-                </button>
-              ))}
-            </div>
+            <label htmlFor="quantity" className="font-bold">Quantity:</label>
+            <input 
+              id="quantity"
+              type="number" 
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+              className="border p-2 ml-2 rounded w-16"
+            />
           </div>
 
-          <button onClick={handleAddToCart} className="mt-4 bg-purple-500 text-white px-4 py-2 rounded">
+          {/* Add to Cart Button */}
+          <button 
+            onClick={handleAddToCart} 
+            className="mt-4 bg-purple-500 text-white px-4 py-2 rounded"
+          >
             Add to Cart
           </button>
-          
+
+          {/* Certificate info */}
           <p className='bg-amber-200 text-amber-700 my-6 p-2'>
             <i className="fa-solid fa-certificate"></i> Certified brands and genuine items
           </p>
-        </div>
-      </div>
-
-      <div className='border-2 border-indigo-600 border-dashed rounded-md p-5 my-6'>
-        <div className='flex flex-row'>
-          <h1 className='text-lg font-bold'>Reviews: </h1>
-          <p className='bg-green-200 p-1 ml-2 rounded'>
-            <i className="fa-solid fa-check"></i> All from verified purchases
-          </p>
-        </div>
-        <div className='m-4'>
-          {Array.isArray(product.review) && product.review.length > 0 ? (
-            product.review.map((review, index) => (
-              <p className='flex items-center mt-2' key={index}>
-                <img src={assets.Profile} className='w-10' alt="Profile" />
-                <span className='ml-2'>{review}</span>
-              </p>
-            ))
-          ) : (
-            <p>No reviews available for this product.</p>
-          )}
         </div>
       </div>
     </div>
@@ -165,3 +207,4 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+

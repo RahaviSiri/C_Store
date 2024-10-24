@@ -10,11 +10,11 @@ exports.addToCart = async (req, res) => {
 exports.getCartItems = async (req, res) => {
     const token = req.body.token;
     //const id = await cartService.getUserID(token);
-    const id = 1;
-    console.log(id);
+    const id = 2;
+    //console.log(id);
     try {
         const cart_id = await cartService.getCartID(id);
-        //console.log(cart_id);
+        console.log(cart_id);
         const cartItems = await cartService.getCartItems(id);
         console.log(cartItems);
         const cart_total = await cartService.getCartTotal(cart_id);
