@@ -54,11 +54,11 @@ const ProductDetails = () => {
   
       await axios.post('http://localhost:3000/cart/add', cartItem);
       setNotification('Product added to cart successfully!');
-      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
+      setTimeout(() => setNotification(''), 5000); // Clear the notification after 5 seconds
     } catch (error) {
       console.error('Error adding product to cart:', error);
       setNotification('Failed to add product to cart.');
-      setTimeout(() => setNotification(''), 3000); // Clear the notification after 3 seconds
+      setTimeout(() => setNotification(''), 5000); // Clear the notification after 5 seconds
     }
   };
 
