@@ -4,13 +4,20 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
 exports.addToCart = async (req, res) => {
-    const { token, product_id, product_name, quantity, price } = req.body;
+    const { token, variant_id,quantity,} = req.body;
+    try {
+        const id = await cartService.getUserID(token);
+        cartService.addToCart(id,variant_id,quantity);
+        res.status(201).json({message: 'Item added to the cart'});
+    } catch (error) {
+        res.status(404).json({ message: 'Failed to add items to cart', error: error.message });
+    }
 }
 
 exports.getCartItems = async (req, res) => {
     const token = req.body.token;
-    //const id = await cartService.getUserID(token);
-    const id = 2;
+    const id = await cartService.getUserID(token);
+    //const id = 2;
     //console.log(id);
     try {
         const cart_id = await cartService.getCartID(id);

@@ -83,3 +83,8 @@ exports.deleteItem = async (cart_id, varient_id) => {
   const sqlInc = 'CALL deleteCartItem(?,?)';
   db.execute(sqlInc, [cart_id,varient_id]);
 }
+
+exports.addToCart = async (user_id, varient_id, quantity) => {
+  const sqlAddToCart = 'CALL addToCart(?,?,?)';
+  db.execute(sqlAddToCart,[user_id, varient_id, quantity])
+}

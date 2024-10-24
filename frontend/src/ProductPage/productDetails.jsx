@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from "../Context/ShopContext";
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { currency, productsItems } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [variants, setVariants] = useState([]);
@@ -81,15 +83,24 @@ const ProductDetails = () => {
     if (!selectedVariant) return;
 
     try {
-      const cartItem = {
-        user_id: 1, // Assuming user_id is 1 for now
-        product_id: product._id,
-        variant_id: selectedVariant.variant_id,
-        quantity,
-        price: selectedVariant.price, // Variant-specific price
-      };
+      // const cartItem = {
+      //   user_id: 1, // Assuming user_id is 1 for now
+      //   product_id: product._id,
+      //   variant_id: selectedVariant.variant_id,
+      //   quantity,
+      //   price: selectedVariant.price, // Variant-specific price
+      // };
 
-      await axios.post('http://localhost:3001/addToCart', cartItem);
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.log('No token found. Redirecting to login...');
+        navigate('/Login');
+        return;
+        
+      }
+
+      await axios.post('http://localhost:3001/addToCart', {token : token , variant_id : selectedVariant.variant_id, quantity : quantity});
       setNotification('Product added to cart successfully!');
       setTimeout(() => setNotification(''), 3000);
     } catch (error) {
