@@ -57,6 +57,7 @@ const Navbar = () => {
           <Link to='/' className='hover:text-indigo-400'>Home</Link>
           <Link to='/ProductCategory' className='hover:text-indigo-400'>Products</Link>
           <Link to='/Cart' className='hover:text-indigo-400'>Cart</Link>
+          {/* <Link to='/About_us' className='hover:text-indigo-400'>About</Link> */}
           <Link to='/About_us' className='hover:text-indigo-400'>About</Link>
           <Link to='/Contact' className='hover:text-indigo-400'>Contact</Link>
         </div>
