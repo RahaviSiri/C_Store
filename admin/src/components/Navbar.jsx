@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css'; // Make sure to create a CSS file for styling
@@ -25,6 +24,9 @@ const Navbar = () => {
         </li>
         <li>
           <Link to="/customer-order-report">Customer Order Report</Link>
+        </li>
+        <li>
+          <Link to="/user-message">Read User Meassage</Link>
         </li>
         <li className='Lo'>
           <Link to="/">Logout</Link>

@@ -30,6 +30,10 @@ const Home = () => {
           <h2>Customer Order Report</h2>
           <p>Review customer orders and their details.</p>
         </Link>
+        <Link to="/user-message" className="report-box">
+          <h2>View Customer Massage</h2>
+          <p>Read customer send masseges.</p>
+        </Link>
       </div>
     </div>
   );

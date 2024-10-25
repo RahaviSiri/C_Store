@@ -7,6 +7,8 @@ import CustomerOrderReport from './components/CustomerOrderReport'; // Import yo
 import TopSellingproduct from './components/TopSellingproduct'; // Import your QuarterlySalesReport component
 import ProductCategoryWithMostOrders from './components/ProductCategoryWithMostOrders'; // Import your QuarterlySalesReport component
 import ProductInterestTimePeriod from './components/ProductInterestTimePeriod'; // Import your QuarterlySalesReport component
+import MessagesList from './components/MessageList';
+import MessageDetails from './components/MessageDetails';
 
 import './App.css';
 
@@ -21,23 +23,18 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Redirect from the root URL to the AdminLogin page */}
+
         <Route path="/" element={<Navigate to="/login" />} />
-        
-        {/* Admin Login Route */}
         <Route path="/login" element={<AdminLogin onLogin={handleLogin} />} />
 
-        {/* Home Route - protected by login state */}
         <Route path="/home" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} />
-        
-        {/* Add report routes here */}
         <Route path="/quarterly-sales-report" element={isLoggedIn ? <QuarterlySalesReport /> : <Navigate to="/login" />} />
-
-        {/* Add more routes for other report pages as needed */}
         <Route path="/customer-order-report" element={isLoggedIn ? <CustomerOrderReport /> : <Navigate to="/login" />} />
         <Route path="/top-selling-products" element={isLoggedIn ? <TopSellingproduct /> : <Navigate to="/login" />} />
         <Route path="/product-category-orders" element={isLoggedIn ? <ProductCategoryWithMostOrders /> : <Navigate to="/login" />} />
         <Route path="/product-interest-trend" element={isLoggedIn ? <ProductInterestTimePeriod /> : <Navigate to="/login" />} />
+        <Route path="/user-message" element={isLoggedIn ? <MessagesList /> : <Navigate to="/login" />} />
+        <Route path="message/:id" element={isLoggedIn ? <MessageDetails /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );

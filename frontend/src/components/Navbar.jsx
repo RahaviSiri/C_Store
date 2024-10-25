@@ -29,17 +29,20 @@ const Navbar = () => {
   };
 
   // Function to handle search
+  // Function to handle search
   const handleSearch = () => {
     const foundProduct = productsItems.find(
       (item) => item.type.toLowerCase() === searchQuery.toLowerCase() 
     );
     if (foundProduct) {
-      navigate(`/product1/${foundProduct.categoryId}`);
+      navigate(`/product1/${foundProduct.categoryId}`); 
     } else {
       navigate("/NotFound");
     }
     setSearchQuery("");
   };
+  
+  
 
   return (
     <nav className='bg-purple-800 text-white'>
