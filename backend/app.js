@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const session = require("express-session");
 require('dotenv').config();
 
 const app = express();
@@ -18,20 +17,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
-/* app.use(session({
-  secret: process.env.SESSION_SECRET, 
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } 
-}));  */
+
 
 
 // Database connection (MySQL pool setup)
 const pool = mysql.createPool({
-  host: process.env.HOST,
+  host: process.env.DB_HOST,
   user: "root",
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -54,9 +48,13 @@ app.get("/productcategory", (req, res) => {
 
 // Route setup
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 // const categoryRoutes = require('./routes/categoryRoutes');
 
 app.use('/', userRoutes);
+app.use('/', adminRoutes);
+app.use('/', cartRoutes);
 // app.use('/', categoryRoutes);
 
 // Cart Start
@@ -69,12 +67,24 @@ app.use('/', productRoutes);
 app.post('/cart/add', (req, res) => {
   const { user_id, product_id, product_name, quantity, price } = req.body;
 
+// <<<<<<< suki008_about_us-changed
   const query = `CALL addToCart(?, ?, ?, ?, ?)`;
 
   pool.query(query, [user_id, product_id, product_name, quantity, price], (err, result) => {
     if (err) {
       console.error("Error calling addToCart procedure:", err);
       return res.status(500).send("Error adding item to cart.");
+
+//   pool.query(
+//     "INSERT INTO cart_item (user_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + 1",
+//     [user_id, product_id, product_name, quantity, price],
+//     (err, result) => {
+//       if (err) {
+//         console.error("Error adding item to cart:", err);
+//         return res.status(500).send("Error adding item to cart.");
+//       }
+//       res.send("Item added to cart successfully.");
+
     }
     res.send("Item added to cart successfully.");
   });
@@ -85,7 +95,7 @@ app.post('/cart/add', (req, res) => {
 app.get('/cart/:userId', (req, res) => {
   const userId = 1;
 
-  pool.query("SELECT * FROM cart_items WHERE user_id = ?", [userId], (err, results) => {
+  pool.query("SELECT * FROM cart_item WHERE user_id = ?", [userId], (err, results) => {
     if (err) {
       console.error("Error fetching cart items:", err);
       return res.status(500).send("Error fetching cart items.");
@@ -99,7 +109,7 @@ app.put('/cart/increment/:id', (req, res) => {
   const id = req.params.id; // Use the id from the request parameters
 
   pool.query(
-    "UPDATE cart_items SET quantity = quantity + 1 WHERE product_id = ?",
+    "UPDATE cart_item SET quantity = quantity + 1 WHERE product_id = ?",
     [id], // Use product_id to update the correct item
     (err, result) => {
       if (err) {
@@ -116,7 +126,7 @@ app.put('/cart/decrement/:id', (req, res) => {
   const id = req.params.id; // Use the id from the request parameters
 
   pool.query(
-    "UPDATE cart_items SET quantity = quantity - 1 WHERE product_id = ? AND quantity > 1",
+    "UPDATE cart_item SET quantity = quantity - 1 WHERE product_id = ? AND quantity > 1",
     [id], // Use product_id to update the correct item
     (err, result) => {
       if (err) {
@@ -132,7 +142,7 @@ app.put('/cart/decrement/:id', (req, res) => {
 app.delete('/cart/remove/:id', (req, res) => {
   const id = req.params.id; // Use the id from the request parameters
 
-  pool.query("DELETE FROM cart_items WHERE product_id = ?", [id], (err, result) => {
+  pool.query("DELETE FROM cart_item WHERE product_id = ?", [id], (err, result) => {
     if (err) {
       console.error("Error removing cart item:", err);
       return res.status(500).send("Error removing cart item.");
@@ -146,7 +156,7 @@ app.get('/cart/total/:userId', (req, res) => {
   const userId = req.params.userId;
 
   pool.query(
-    "SELECT SUM(quantity * price) AS total FROM cart_items WHERE user_id = ?",
+    "SELECT SUM(quantity * price) AS total FROM cart_item WHERE user_id = ?",
     [userId],
     (err, results) => {
       if (err) {
@@ -163,12 +173,12 @@ app.get('/cart/count/:userId', (req, res) => {
   const userId = req.params.userId;
 
   pool.query(
-    "SELECT COUNT(id) AS count FROM cart_items WHERE user_id = ?",
+    "SELECT SUM(quantity) AS count FROM cart_item WHERE user_id = ?",
     [userId],
     (err, results) => {
       if (err) {
         console.error("Error fetching total count:", err);
-        return res.status(500).send("Error fetching total count.");
+        return res.status(500).json({ error: "Error fetching total count." });
       }
       res.json({ count: results[0].count || 0 }); // Send the count value
     }

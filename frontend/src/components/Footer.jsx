@@ -18,8 +18,8 @@ const Footer = () => (
       <div className="flex flex-col space-y-2 md:space-y-4 text-center md:text-left">
         <p className='text-xl font-semibold underline mb-2'>INFORMATION</p>
         <a href="/" className="text-lg hover:text-purple-300 flex items-center  md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Home</span></a>
-        <a href="/about" className="text-lg hover:text-purple-300 flex items-center  md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>About Us</span></a>
-        <a href="/products" className="text-lg hover:text-purple-300 flex items-center md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Products</span></a>
+        <a href="/About_us" className="text-lg hover:text-purple-300 flex items-center  md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>About Us</span></a>
+        <a href="/ProductCategory" className="text-lg hover:text-purple-300 flex items-center md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Products</span></a>
         <a href="/contact" className="text-lg hover:text-purple-300 flex items-center md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Contact Us</span></a>
         <a href="/privacy" className="text-lg hover:text-purple-300 flex items-center md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Privacy Policy</span></a>
         <a href="/terms" className="text-lg hover:text-purple-300 flex items-center  md:justify-start space-x-2"><i className="fa fa-star" aria-hidden="true"></i><span>Terms & Conditions</span></a>
