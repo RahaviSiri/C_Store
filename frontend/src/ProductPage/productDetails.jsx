@@ -52,7 +52,7 @@ const ProductDetails = () => {
         price: product.price,
       };
   
-      await axios.post('http://localhost:3000/cart/add', cartItem);
+      await axios.post('http://localhost:3001/cart/add', cartItem);
       setNotification('Product added to cart successfully!');
 // <<<<<<< suki008_about_us-changed
       setTimeout(() => setNotification(''), 5000); // Clear the notification after 5 seconds

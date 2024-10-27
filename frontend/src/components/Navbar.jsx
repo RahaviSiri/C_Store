@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const fetchCartCount = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/cart/count/${userId}`);
+      const response = await fetch(`http://localhost:3001/cart/count/${userId}`);
       const data = await response.json();
       setCartCount(data.count);
     } catch (error) {
