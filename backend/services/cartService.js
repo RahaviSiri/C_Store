@@ -17,7 +17,7 @@ exports.getCartID = async (id) => {
   try {
       const [rows] = await db.execute(getcID, [id]); // 'rows' will contain the result set
       if (rows.length > 0) {
-          //console.log(rows[0].cart_id);
+          console.log(rows[0].cart_id);
           return rows[0].cart_id; // Return the cart_id of the first row
       } else {
           return null; // Return null if no cart was found for the given customer_id
@@ -35,7 +35,7 @@ exports.getCartTotal = async (cart_id) => {
     const [rows] = await db.execute(sqlTot, [cart_id]); // 'rows' will contain the result set
     return rows[0].cart_total;
   } catch (error) {
-      throw new Error('Error fetching cart ID: ' + error.message);
+      throw new Error('Error fetching cart total: ' + error.message);
   }
 
 }
@@ -82,4 +82,9 @@ exports.decrementItem = async (cart_id, varient_id) => {
 exports.deleteItem = async (cart_id, varient_id) => {
   const sqlInc = 'CALL deleteCartItem(?,?)';
   db.execute(sqlInc, [cart_id,varient_id]);
+}
+
+exports.addToCart = async (user_id, varient_id, quantity) => {
+  const sqlAddToCart = 'CALL addToCart(?,?,?)';
+  db.execute(sqlAddToCart,[user_id, varient_id, quantity])
 }
