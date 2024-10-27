@@ -54,7 +54,6 @@ app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
 app.use('/cart', cartRoutes);
-// app.use('/', categoryRoutes);
 
 // Cart Start
 

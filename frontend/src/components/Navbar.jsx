@@ -18,6 +18,7 @@ const Navbar = () => {
   }, []);
 
   const fetchCartCount = async () => {
+    // Created token
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('No token found. Redirecting to login...');

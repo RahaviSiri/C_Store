@@ -88,3 +88,9 @@ exports.addToCart = async (user_id, varient_id, quantity) => {
   const sqlAddToCart = 'CALL addToCart(?,?,?)';
   db.execute(sqlAddToCart,[user_id, varient_id, quantity])
 }
+
+exports.getCartCount = async (id) => {
+  const count = 'SELECT getCartItemCount(?) AS cartCount';
+  const [rows] = await db.execute(count, [id]);
+  return rows[0].cartCount; 
+};
