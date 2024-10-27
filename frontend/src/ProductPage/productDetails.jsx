@@ -191,14 +191,31 @@ const ProductDetails = () => {
           {/* Quantity Selector */}
           <div className='mt-4'>
             <label htmlFor="quantity" className="font-bold">Quantity:</label>
-            <input 
-              id="quantity"
-              type="number" 
-              value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-              className="border p-2 ml-2 rounded w-16"
-            />
+            <div className="flex items-center mt-2">
+              {/* Decrement Button */}
+              <button 
+                onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                className="bg-gray-200 text-gray-700 font-bold px-3 py-1 rounded-l hover:bg-purple-100"
+              > - </button>
+
+              {/* Quantity Display */}
+              <input 
+                id="quantity"
+                type="text"
+                value={quantity}
+                onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                className="border-t border-b border-gray-300 p-2 text-center w-16 h-8 outline-none"
+                readOnly
+              />
+
+              {/* Increment Button */}
+              <button 
+                onClick={() => setQuantity((prev) => prev + 1)}
+                className="bg-gray-200 text-gray-700 font-bold px-3 py-1 rounded-r hover:bg-purple-100"
+              > + </button>
+            </div>
           </div>
+
 
           {/* Add to Cart Button */}
           <button 
