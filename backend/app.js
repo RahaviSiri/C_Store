@@ -18,8 +18,6 @@ app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
 
-
-
 // Database connection (MySQL pool setup)
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -55,6 +53,7 @@ const cartRoutes = require('./routes/cartRoutes');
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
+app.use('/cart', cartRoutes);
 // app.use('/', categoryRoutes);
 
 // Cart Start

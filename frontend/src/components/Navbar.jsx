@@ -18,15 +18,25 @@ const Navbar = () => {
   }, []);
 
   const fetchCartCount = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No token found. Redirecting to login...');
+      navigate('/Login');
+      return;
+    }
     try {
-      const response = await fetch(`http://localhost:3001/cart/count/${userId}`);
+      const response = await fetch(`http://localhost:3001/cartCount`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
-      setCartCount(data.count);
+      setCartCount(data.cartCount);
     } catch (error) {
-      setError('Error fetching cart items. Please try again.');
-      console.error('Error fetching cart items:', error);
+      setError('Error fetching cart count. Please try again.');
+      console.error('Error fetching cart count:', error);
     } 
-  };
+  };  
 
   // Function to handle search
   // Function to handle search
@@ -42,8 +52,6 @@ const Navbar = () => {
     setSearchQuery("");
   };
   
-  
-
   return (
     <nav className='bg-purple-800 text-white'>
       <div className='flex items-center justify-between py-3 px-4 sm:px-5'>

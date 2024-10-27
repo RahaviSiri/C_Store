@@ -83,3 +83,9 @@ exports.deleteItem = async (cart_id, varient_id) => {
   const sqlInc = 'CALL deleteCartItem(?,?)';
   db.execute(sqlInc, [cart_id,varient_id]);
 }
+exports.getCartCount = async (id) => {
+  const count = 'SELECT getCartItemCount(?) AS cartCount';
+  const [rows] = await db.execute(count, [id]);
+  console.log(rows[0]);
+  return rows[0].cartCount; 
+};
