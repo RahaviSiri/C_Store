@@ -19,10 +19,11 @@ app.use(express.static("public"));
 app.use(express.json());
 
 
+
 // Database connection (MySQL pool setup)
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
-  user: "root",
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   waitForConnections: true,
@@ -32,10 +33,10 @@ const pool = mysql.createPool({
 
 // Route to fetch product categories
 app.get("/productcategory", (req, res) => {
-  pool.query("SELECT * FROM products;", (err, result) => {
+  pool.query("SELECT * FROM category;", (err, result) => {
     if (err) {
       console.error("Database error:", err);
-      return res.status(500).send("Database error.");
+      res.status(500).json({ error: "Database error." });
     }
     // If you are using a view engine, uncomment the following
     // res.render("pages/productcategory", { result: result });
@@ -62,21 +63,33 @@ const productRoutes = require('./routes/productRoutes');
 app.use('/', productRoutes);
 
 // Add cart item
+// Add item to cart using stored procedure
 app.post('/cart/add', (req, res) => {
   const { user_id, product_id, product_name, quantity, price } = req.body;
 
-  pool.query(
-    "INSERT INTO cart_item (user_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + 1",
-    [user_id, product_id, product_name, quantity, price],
-    (err, result) => {
-      if (err) {
-        console.error("Error adding item to cart:", err);
-        return res.status(500).send("Error adding item to cart.");
-      }
-      res.send("Item added to cart successfully.");
+// <<<<<<< suki008_about_us-changed
+  const query = `CALL addToCart(?, ?, ?, ?, ?)`;
+
+  pool.query(query, [user_id, product_id, product_name, quantity, price], (err, result) => {
+    if (err) {
+      console.error("Error calling addToCart procedure:", err);
+      return res.status(500).send("Error adding item to cart.");
+
+//   pool.query(
+//     "INSERT INTO cart_item (user_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + 1",
+//     [user_id, product_id, product_name, quantity, price],
+//     (err, result) => {
+//       if (err) {
+//         console.error("Error adding item to cart:", err);
+//         return res.status(500).send("Error adding item to cart.");
+//       }
+//       res.send("Item added to cart successfully.");
+
     }
-  );
+    res.send("Item added to cart successfully.");
+  });
 });
+
 
 // Get cart items
 app.get('/cart/:userId', (req, res) => {
@@ -196,7 +209,7 @@ app.post('/contact/add', (req, res) => {
 // Contact End
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

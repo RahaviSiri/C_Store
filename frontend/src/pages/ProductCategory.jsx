@@ -17,7 +17,7 @@ const ProductCategory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/productcategory');
+        const response = await fetch('http://localhost:3001/productcategory');
         const data = await response.json();
         setProducts(data);
         setFilterProducts(data);
@@ -45,7 +45,7 @@ const ProductCategory = () => {
     let productsCopy = products.slice();
 
     if (category.length > 0) {
-      productsCopy = productsCopy.filter(item => category.includes(item.category));
+      productsCopy = productsCopy.filter(item => category.includes(item.type));
     }
     if (subCategory.length > 0) {
       productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory));
@@ -135,8 +135,8 @@ const ProductCategory = () => {
               <ProductItem 
                 key={index}
                 name={item.name}
-                id={item._id}
-                image={item.image} 
+                id={item.category_id}
+                image={item.image_url} 
               />
             ))
           ) : (

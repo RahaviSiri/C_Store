@@ -83,6 +83,7 @@ const ProductDetails = () => {
     if (!selectedVariant) return;
 
     try {
+
       // const cartItem = {
       //   user_id: 1, // Assuming user_id is 1 for now
       //   product_id: product._id,
@@ -107,6 +108,7 @@ const ProductDetails = () => {
       console.error('Error adding product to cart:', error);
       setNotification('Failed to add product to cart.');
       setTimeout(() => setNotification(''), 3000);
+
     }
   };
 
