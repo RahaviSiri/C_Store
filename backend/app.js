@@ -48,12 +48,14 @@ app.get("/productcategory", (req, res) => {
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 // const categoryRoutes = require('./routes/categoryRoutes');
 
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
 app.use('/cart', cartRoutes);
+app.use('/contact', contactRoutes);
 
 // Cart Start
 
@@ -188,21 +190,21 @@ app.get('/cart/count/:userId', (req, res) => {
 
 // Contact Start
 
-app.post('/contact/add', (req, res) => {
-  const { name, email, message } = req.body;
+// app.post('/contact/add', (req, res) => {
+//   const { userId, subject, message } = req.body;
 
-  pool.query(
-    "INSERT INTO Contact (name, email, message) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE message = VALUES(message)",
-    [name, email, message],
-    (err, result) => {
-      if (err) {
-        console.error("Error adding contact message:", err);
-        return res.status(500).send("Error adding contact message.");
-      }
-      res.send("Contact message added successfully.");
-    }
-  );
-});
+//   pool.query(
+//     "INSERT INTO user_messages (user_id, subject, message) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE message = VALUES(message)",
+//     [userId, subject, message],
+//     (err, result) => {
+//       if (err) {
+//         console.error("Error adding contact message:", err);
+//         return res.status(500).send("Error adding contact message.");
+//       }
+//       res.send("Contact message added successfully.");
+//     }
+//   );
+// });
 
 // Contact End
 
