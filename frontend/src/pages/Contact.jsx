@@ -1,34 +1,37 @@
 import React, { useState } from 'react';
 import Title from '../components/Title';
+import Axios from 'axios';
 import { assets } from '../../public/assets/assets';
 
 const Contact = () => {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
-      const res = await fetch('http://localhost:3000/contact/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, message }),
+      const token = localStorage.getItem('token'); 
+      const res = await Axios.post('http://localhost:3001/contact', {
+        token:token,
+        subject:subject,
+        message:message,
       });
 
-      const result = await res.text();
-      setResponse(result);  // You can handle success or error messages here
-      if (res.ok) {
+      setResponse(res.data); 
+      if (res.status === 200) {
         setName('');
-        setEmail('');
+        setSubject('');
         setMessage('');
       }
     } catch (error) {
       console.error('Error sending message:', error);
       setResponse('Failed to send message. Please try again.');
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -82,11 +85,11 @@ const Contact = () => {
               required
             />
             <input 
-              type='email' 
-              placeholder='Your Email' 
+              type='text' 
+              placeholder='Subject' 
               className='p-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               required
             />
             <textarea 
@@ -100,7 +103,7 @@ const Contact = () => {
               type='submit' 
               className='bg-pink-600 text-white py-3 rounded-md hover:bg-pink-800 transition duration-200'
             >
-              Send Message
+              {loading ? 'Sending...' : 'Send Message'}
             </button>
           </form>
           {response && <p className="mt-4 text-center text-green-500">{response}</p>}
