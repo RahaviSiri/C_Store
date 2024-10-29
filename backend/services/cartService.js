@@ -94,3 +94,15 @@ exports.getCartCount = async (id) => {
   const [rows] = await db.execute(count, [id]);
   return rows[0].cartCount; 
 };
+
+exports.getCheckoutItems = async (checkoutCombination, cart_id) => {
+  const sql = 'SELECT getCheckoutItems(?,?) AS checkoutItems';
+  const [rows] = await db.execute(sql, [cart_id, checkoutCombination]);
+  console.log(rows[0].checkoutItems);
+  return rows[0].checkoutItems;
+};
+
+exports.checkout = async (cart_id, paymentMethod, combination) => {
+  const sql = 'CALL checkout(?,?,?)';
+  db.execute(sql, [cart_id, paymentMethod, combination]);
+};
