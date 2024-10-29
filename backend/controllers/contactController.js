@@ -1,8 +1,16 @@
 const contactService = require('../services/contactService');
+const userService = require("../services/userService");
 
 exports.contactUs = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  console.log('Authorization Header:', authHeader);
+  const token = authHeader && authHeader.split(' ')[1]; 
+  console.log('Authorization Header:', token);
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
   try {
-    const { token ,subject, message } = req.body;
+    const { subject, message } = req.body;
     const id = await userService.getUserID(token);
     // Pass the correct parameters to the contactUs function
     const contactResponse = await contactService.contact({ id, subject, message });

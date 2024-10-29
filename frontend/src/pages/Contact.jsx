@@ -33,7 +33,7 @@ const Contact = () => {
         }
       });
   
-      setResponse(res.data); 
+      setResponse(res.data.message); 
       if (res.status === 200) {
         setName('');
         setSubject('');
