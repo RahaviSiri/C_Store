@@ -1,7 +1,7 @@
 const cartService = require('../services/cartService');
-const userService = require('../services/userService');
-const jwt = require('jsonwebtoken');
-const db = require('../config/db');
+// const userService = require('../services/userService');
+// const jwt = require('jsonwebtoken');
+// const db = require('../config/db');
 
 exports.addToCart = async (req, res) => {
     const { token, variant_id,quantity,} = req.body;
@@ -64,8 +64,24 @@ exports.deleteItem = async (req, res) => {
     }
 }
 
-exports.checkout = async (req, res) => {
+exports.getCheckoutItems = async (req, res) => {
+    const {combination, cart_id} = req.body;
+    try {
+        const checkoutItems = await cartService.getCheckoutItems(combination, cart_id);
+        res.status(201).json({message: 'Checkout items fetched', checkoutItems});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to get checkout items', error: error.message });
+    }
+}
 
+exports.checkout = async (req, res) => {
+    const {combination, cart_id, paymentMethod} = req.body;
+    try {
+        await cartService.checkout(cart_id, paymentMethod, combination);
+        res.status(201).json({message: 'Checkout successful'});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to checkout', error: error.message });
+    }
 }
 
 exports.cartCount = async (req, res) => {

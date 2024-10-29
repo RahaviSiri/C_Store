@@ -83,6 +83,31 @@ const Cart = () => {
     });
   };
 
+  const getCheckoutCombination = () => {
+    let combination = '';
+    items.forEach((item) => {
+      combination += selectedItems.includes(item.item_index) ? '1' : '0';
+    });
+    return combination;
+  };
+
+  const checkout = () => {
+    const combination = getCheckoutCombination();
+    //const cart_id = "your_cart_id"; // Replace with actual cart_id
+    //const customer_id = "your_customer_id"; // Replace with actual customer_id
+
+    console.log('Checkout combination:', combination);
+
+    // Call checkout page with params combination, cart_id, and customer_id
+    if (combination !== '00') {
+        navigate(`/checkout?combination=${combination}&cart_id=${cart_id}`);
+    }
+    else {
+      alert('Please select at least one item to checkout!');
+    }
+  };
+
+
   if (loading) {
     return <div className="text-center">Loading cart items...</div>;
   }
@@ -101,8 +126,8 @@ const Cart = () => {
           <div key={item.variant_id} className="w-full bg-gray-50 mb-4 p-4 rounded-lg shadow-md flex justify-between items-center border border-gray-300">
             <input 
               type="checkbox"
-              checked={selectedItems.includes(item.variant_id)} 
-              onChange={() => handleCheckboxChange(item.variant_id)} 
+              checked={selectedItems.includes(item.item_index)} 
+              onChange={() => handleCheckboxChange(item.item_index)} 
               className="mr-4"
             />
             <div className="flex items-center">
@@ -111,6 +136,7 @@ const Cart = () => {
               <button onClick={() => incrementCartItem(cart_id, item.variant_id)} className="bg-purple-200 text-purple-600 p-2 rounded-md ml-2 hover:bg-purple-300 transition duration-200">+</button>
             </div>
             <span className="flex-1 text-center font-semibold text-lg">{item.name}</span>
+            <span className="flex-1 text-center font-semibold text-lg">{item.item_index}</span>
             <span className="flex-1 text-center font-semibold text-lg">${item.total_price}</span>
             <button onClick={() => removeCartItem(cart_id, item.variant_id)} className="text-lg text-red-500 hover:underline">Remove</button>
           </div>
@@ -118,7 +144,7 @@ const Cart = () => {
       )}
       <div className="flex justify-between w-full mt-6 border-t pt-4 border-gray-300">
         <div className="text-xl font-bold text-purple-800">Total: ${cart_total}</div>
-        <Link to="/checkout" className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition duration-200">Checkout</Link>
+        <button onClick = {() => checkout()} className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition duration-200">Checkout</button>
       </div>
     </div>
   );

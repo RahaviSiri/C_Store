@@ -70,7 +70,8 @@ const Login = () => {
         }
       } 
       catch (error) {
-        console.error("Login error:", error);
+        //console.error("Login error:", error);
+        alert('Invalid email or password');
       }
     }
   };

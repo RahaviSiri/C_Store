@@ -8,6 +8,7 @@ router.post('/getCartItems', cartController.getCartItems);
 router.post('/incrementItem', cartController.incrementItem);
 router.post('/decrementItem', cartController.decrementItem);
 router.post('/deleteItem', cartController.deleteItem);
+router.post('/getCheckoutItems', cartController.getCheckoutItems);
 router.post('/checkout',cartController.checkout);
 // CartCount route
 router.get('/cartCount', cartController.cartCount);
