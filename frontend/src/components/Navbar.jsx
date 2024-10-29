@@ -25,8 +25,10 @@ const Navbar = () => {
       navigate('/Login');
       return;
     }
+    console.log('Token:', token);
     try {
       const response = await fetch(`http://localhost:3001/cartCount`, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
         }

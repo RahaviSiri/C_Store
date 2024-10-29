@@ -90,7 +90,18 @@ exports.addToCart = async (user_id, varient_id, quantity) => {
 }
 
 exports.getCartCount = async (id) => {
-  const count = 'SELECT getCartItemCount(?) AS cartCount';
-  const [rows] = await db.execute(count, [id]);
-  return rows[0].cartCount; 
+  const count = 'CALL getCartItemCount(?)';
+
+  try {
+    const [rows] = await db.execute(count, [id]);
+    if (rows.length > 0) {
+      return rows[0][0].item_count; 
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.error('Error executing procedure:', error);
+    throw new Error('Failed to get cart count'); 
+  }
 };
+
