@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Title from '../components/Title';
 import Axios from 'axios';
 import { assets } from '../../public/assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
   const [name, setName] = useState('');
@@ -9,18 +10,29 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); 
     try {
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('No token found. Redirecting to login...');
+        navigate('/Login');
+        return;
+      }
+  
       const res = await Axios.post('http://localhost:3001/contact', {
-        token:token,
-        subject:subject,
-        message:message,
+        token: token,
+        subject: subject,
+        message: message,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
-
+  
       setResponse(res.data); 
       if (res.status === 200) {
         setName('');
@@ -33,7 +45,7 @@ const Contact = () => {
     } finally {
       setLoading(false); 
     }
-  };
+  };  
 
   return (
     <div className='container mx-auto px-4'>
