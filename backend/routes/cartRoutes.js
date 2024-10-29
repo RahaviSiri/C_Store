@@ -10,6 +10,7 @@ router.post('/decrementItem', cartController.decrementItem);
 router.post('/deleteItem', cartController.deleteItem);
 router.post('/checkout',cartController.checkout);
 // CartCount route
-router.post('/cartCount', cartController.cartCount);
+router.get('/cartCount', cartController.cartCount);
+
 
 module.exports = router;

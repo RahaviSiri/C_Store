@@ -70,20 +70,23 @@ exports.checkout = async (req, res) => {
 
 exports.cartCount = async (req, res) => {
     const authHeader = req.headers.authorization;
+    console.log('Authorization Header:', authHeader);
     const token = authHeader && authHeader.split(' ')[1]; 
+    console.log('Authorization Header:', token);
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
-    
     try {
-      const id = await cartService.getUserID(token); // Assuming getUserID uses the token to fetch the user ID
-      const cartCount = await cartService.getCartCount(id); // Get the cart count
-      console.log(cartCount); // Log the cart count for debugging
+      const id = await cartService.getUserID(token);
+      console.log(id);
+      const cartCount = await cartService.getCartCount(id); 
       res.status(200).json({ message: 'Cart count fetched', cartCount });
     } catch (error) {
+      console.error("Error fetching cart count:", error);
       res.status(401).json({ message: 'Failed to get cart items', error: error.message });
     }
-  };
+};
+  
   
 
 

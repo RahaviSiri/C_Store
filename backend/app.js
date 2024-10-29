@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
+const db = require('./config/db');
 
 // Middleware
 app.use(express.static("public"));
@@ -19,29 +20,25 @@ app.use(express.static("public"));
 app.use(express.json());
 
 // Database connection (MySQL pool setup)
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+// const pool = mysql.createPool({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0
+// });
 
 // Route to fetch product categories
-app.get("/productcategory", (req, res) => {
-  pool.query("SELECT * FROM category;", (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      res.status(500).json({ error: "Database error." });
-    }
-    // If you are using a view engine, uncomment the following
-    // res.render("pages/productcategory", { result: result });
-
-    // For sending JSON data to the frontend:
+app.get("/productcategory", async (req, res) => {
+  try {
+    const [result] = await db.query("SELECT * FROM category;");
     res.json(result);
-  });
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error." });
+  }
 });
 
 // Route setup
@@ -54,8 +51,8 @@ const contactRoutes = require('./routes/contactRoutes');
 app.use('/', userRoutes);
 app.use('/', adminRoutes);
 app.use('/', cartRoutes);
-app.use('/cart', cartRoutes);
-app.use('/contact', contactRoutes);
+// app.use('/cart', cartRoutes);
+app.use('/', contactRoutes);
 
 // Cart Start
 
