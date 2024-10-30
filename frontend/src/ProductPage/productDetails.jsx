@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductDetails = () => {
-  //const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const Params = new URLSearchParams(location.search);

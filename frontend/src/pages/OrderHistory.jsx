@@ -82,7 +82,7 @@ const OrderHistory = () => {
                         <div key={order.order_id} className="p-6 bg-white shadow-lg rounded-lg border-2 border-purple-200">
                             <p className="text-lg font-semibold my-2"><strong>Order Date:</strong> {order.order_date}</p>
                             <p className='my-2'><strong>Variant Color:</strong> {order.color}</p>
-                            <img src={`/assets/${order.picture_url}`} alt={order.SKU} className="w-32 h-32 rounded-md my-4 border border-purple-300" />
+                            <img src={`${order.picture_url}`} alt={order.SKU} className="w-32 h-32 rounded-md my-4 border border-purple-300" />
                             <p className='my-2'><strong>Quantity:</strong> {order.quantity}</p>
                             <p className='my-2'><strong>Shipment Status:</strong> {order.shipment_status}</p>
 
