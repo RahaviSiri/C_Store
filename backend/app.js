@@ -11,7 +11,7 @@ const db = require('./config/db');
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: 'http://localhost:5173', 
+  origin: 'http://localhost:5175', 
   credentials: true 
 };
 
@@ -205,8 +205,14 @@ app.get('/cart/count/:userId', (req, res) => {
 
 // Contact End
 
+// OrderHistory 
+
+// const categoryRoutes = require('./routes/categoryRoutes');
+
+
 // Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
