@@ -72,7 +72,7 @@ const Product1 = () => {
                 />
               </div>
 
-              <Link to={"/productdetails/" + product._id} className='flex-1 flex flex-col justify-between pl-2 sm:pl-4'>
+              <Link to={"/productdetails/" + product.SKU} className='flex-1 flex flex-col justify-between pl-2 sm:pl-4'>
                 {/* Product Info */}
                 <div className='flex flex-col gap-3'>
                   <h1 className='font-medium text-2xl mt-2'>{product.product_name}</h1>
