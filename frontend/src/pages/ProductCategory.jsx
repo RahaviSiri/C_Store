@@ -11,7 +11,6 @@ const ProductCategory = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
-  const [sortType, setSortType] = useState("relevant");
   const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
@@ -48,35 +47,35 @@ const ProductCategory = () => {
       productsCopy = productsCopy.filter(item => category.includes(item.type));
     }
     if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory));
+      productsCopy = productsCopy.filter(item => subCategory.includes(item.subcategory));
     }
     setFilterProducts(productsCopy);
   };
 
-  const sortProduct = () => {
-    let sortedProducts = [...filterProducts];
+  // const sortProduct = () => {
+  //   let sortedProducts = [...filterProducts];
 
-    switch (sortType) {
-      case "low-high":
-        sortedProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "high-low":
-        sortedProducts.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        return;
-    }
+  //   switch (sortType) {
+  //     case "low-high":
+  //       sortedProducts.sort((a, b) => a.price - b.price);
+  //       break;
+  //     case "high-low":
+  //       sortedProducts.sort((a, b) => b.price - a.price);
+  //       break;
+  //     default:
+  //       return;
+  //   }
 
-    setFilterProducts(sortedProducts);
-  };
+  //   setFilterProducts(sortedProducts);
+  // };
 
   useEffect(() => {
     applyFilter();
   }, [category, subCategory]);
 
-  useEffect(() => {
-    sortProduct();
-  }, [sortType, filterProducts]);
+  // useEffect(() => {
+  //   sortProduct();
+  // }, [sortType, filterProducts]);
 
   if (loading) {
     return <p>Loading...</p>; // Loading state
@@ -123,11 +122,11 @@ const ProductCategory = () => {
       <div className='flex-1'>
         <div className='flex justify-between text-base sm:text-2xl mb-4'>
           <Title text1="ALL" text2="PRODUCTS CATEGORY" />
-          <select onChange={(e) => setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
+          {/* <select onChange={(e) => setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
             <option value="relevant">Sort by: Relevant</option>
             <option value="low-high">Sort by: Low to High</option>
             <option value="high-low">Sort by: High to Low</option>
-          </select>
+          </select> */}
         </div>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-6'>
           {filterProducts.length > 0 ? (

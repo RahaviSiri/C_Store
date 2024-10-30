@@ -33,7 +33,7 @@ const Home = () => {
   }, []);
 
   // Filter to display only specific categories by ID
-  const specificCategoryIds = ['1', '10', '3',"8"]; // Adjust these IDs as needed
+  const specificCategoryIds = ['1', '10', '3',"8",'6','5']; // Adjust these IDs as needed
   const filteredCategories = categories.filter(category =>
     specificCategoryIds.includes(category.category_id.toString())
   );
