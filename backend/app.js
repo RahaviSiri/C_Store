@@ -41,11 +41,41 @@ app.get("/productcategory", async (req, res) => {
   }
 });
 
+app.get("/productSet", async (req, res) => {
+  const { categoryId } = req.query; 
+  try {
+    const query = `
+      SELECT 
+          pb.SKU,
+          p.name AS product_name,
+          p.description,
+          pv.color,
+          pv.price,
+          pv.picture_url
+      FROM 
+          product_belongs_to pb
+      JOIN 
+          product p ON pb.SKU = p.SKU
+      JOIN 
+          variant pv ON pb.SKU = pv.SKU
+      WHERE 
+          pb.category_id = ?;
+    `;
+    const [result] = await db.query(query, [categoryId]);
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error." });
+  }
+});
+
+
 // Route setup
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const orderHistoryRoutes = require('./routes/orderHistoryRoutes');
 // const categoryRoutes = require('./routes/categoryRoutes');
 
 app.use('/', userRoutes);
@@ -53,6 +83,7 @@ app.use('/', adminRoutes);
 app.use('/', cartRoutes);
 // app.use('/cart', cartRoutes);
 app.use('/', contactRoutes);
+app.use('/',orderHistoryRoutes);
 
 // Cart Start
 
@@ -205,8 +236,61 @@ app.get('/cart/count/:userId', (req, res) => {
 
 // Contact End
 
+// OrderHistory 
+// API to get order history based on customer_id
+// app.get('/getOrderHistory', (req, res) => {
+//   const customerId = req.query.customer_id;
+
+//   const query = `
+//   SELECT o.order_id, o.order_date, p.name, oi.quantity, v.SKU, v.color, v.picture_url, s.shipment_status 
+//   FROM orders o
+//   JOIN order_item oi ON o.order_id = oi.order_id
+//   JOIN variant v ON oi.SKU = v.SKU
+//   JOIN product p ON v.SKU = p.SKU
+//   JOIN shipment s ON o.shipment_id = s.shipment_id
+//   WHERE o.customer_id = ?;
+//   `;
+
+//   db.query(query, [customerId], (error, results) => {
+//     if (error) {
+//       console.error('Error fetching order history:', error);
+//       res.status(500).json({ message: 'Database error' });
+//     } else {
+//       console.log(results);  // Add this to debug the database output
+//       res.json({ orders: results });
+//     }
+//   });  
+// });
+
+
+// API to update shipment status to 'received' based on customer_id
+// app.get('/updateShipmentStatus', (req, res) => {
+//   const orderId = req.query.order_id;  // Get order_id from query parameter
+
+//   const updateQuery = `
+//   UPDATE shipment s
+//   JOIN orders o ON s.shipment_id = o.shipment_id
+//   SET s.shipment_status = 'received'
+//   WHERE o.order_id = ?;
+//   `;
+
+//   db.query(updateQuery, [orderId], (error, result) => {
+//     if (error) {
+//       console.error('Error updating shipment status:', error);
+//       res.status(500).json({ message: 'Error updating shipment status' });
+//     } else {
+//       res.json({ message: 'Shipment status updated to received' });
+//     }
+//   });
+// });
+
+
+// const categoryRoutes = require('./routes/categoryRoutes');
+
+
 // Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+

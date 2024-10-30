@@ -1,10 +1,10 @@
 //Home.jsx
-
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ImageSwitcher from '../components/ImageSwithcher';  
 import Card from '../components/Card';
-import { productsItems } from '../../public/assets/assets2';
+// import { productsItems } from '../../public/assets/assets2';
 
 const images = [
   '/1.jpg',
@@ -15,14 +15,28 @@ const images = [
 ];
 
 const Home = () => {
-  const productCategories = [
-    productsItems.find(product => product.categoryId === '1'),  
-    productsItems.find(product => product.categoryId === '2'),  
-    productsItems.find(product => product.categoryId === '3'),
-    productsItems.find(product => product.categoryId === '8'),
-    productsItems.find(product => product.categoryId === '9'),
-    productsItems.find(product => product.categoryId === '5')
-  ].filter(product => product);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/productcategory');
+        const data = await response.json();
+        setCategories(data); // Set the categories directly
+      } catch (error) {
+        console.error('Error fetching category data:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Filter to display only specific categories by ID
+  const specificCategoryIds = ['1', '10', '3',"8",'6','5']; // Adjust these IDs as needed
+  const filteredCategories = categories.filter(category =>
+    specificCategoryIds.includes(category.category_id.toString())
+  );
 
   return (
     <div className='flex flex-col'>
@@ -60,13 +74,13 @@ const Home = () => {
         
         {/* Product Cards - Responsive grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {productCategories.map((product, index) => (
+          {filteredCategories.map((product, index) => (
             <Card 
               key={index} 
               itemName={product.name} 
               details={"Good Product"} 
-              price={product.price} 
-              image={product.image} 
+              // price={product.price} 
+              image={product.image_url} 
             />
           ))}
         </div>

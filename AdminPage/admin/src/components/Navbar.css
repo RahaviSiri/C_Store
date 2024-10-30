@@ -1,0 +1,67 @@
+/* Navbar.css */
+
+/* Import Lexend font */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #000;
+  padding: 1rem 2rem;
+  font-family: 'Lexend', sans-serif;
+}
+
+.logo {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding-left: 0;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links li {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Add vertical separator between links */
+.nav-links li:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: -0.75rem;
+  height: 1.2rem;
+  width: 1px;
+  background-color: #555;
+}
+
+.nav-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 400;
+  padding: 0 0.5rem;
+}
+
+.nav-links li a:hover {
+  color: #ff9800;
+}
+
+.Lo a {
+  color: #ff3d00; /* Color for logout link */
+  font-weight: 600;
+}
+
+.Lo a:hover {
+  color: #d32f2f;
+}

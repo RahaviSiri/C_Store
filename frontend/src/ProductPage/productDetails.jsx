@@ -10,6 +10,9 @@ const ProductDetails = () => {
   const location = useLocation();
   const Params = new URLSearchParams(location.search);
   const { currency, productsItems } = useContext(ShopContext);
+
+  const { currency } = useContext(ShopContext);
+
   const [product, setProduct] = useState(null);
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Selected variant state
