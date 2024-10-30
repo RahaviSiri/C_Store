@@ -1,23 +1,29 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from "../Context/ShopContext";
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+//import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductDetails = () => {
-  const { id } = useParams();
+  //const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const Params = new URLSearchParams(location.search);
+  const { currency, productsItems } = useContext(ShopContext);
+
   const { currency } = useContext(ShopContext);
+
   const [product, setProduct] = useState(null);
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Selected variant state
-  const [sku, setSku] = useState('SKU001'); // For SKU input testing
-  const [SKU, setSKU] = useState('SKU001'); // For SKU input testing
+  //const SKU = Params.get('sku'); // For SKU input testing
+  const sku = Params.get('sku'); // SKU state
   const [notification, setNotification] = useState(''); // State for notification
   const [quantity, setQuantity] = useState(1); // Quantity selector
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(''); // Error state
-
+  console.log(sku);
+  //setSku(SKU);
   // Fetch product by SKU or by ID
   useEffect(() => {
     const fetchProduct = async () => {
@@ -134,6 +140,7 @@ const ProductDetails = () => {
         <div className='flex-1'>
         <img 
           src={selectedVariant ? selectedVariant.picture_url : 'https://images.squarespace-cdn.com/content/v1/58c04c7cb3db2b1cbe0a403b/dce7faef-d29b-4a60-abe5-65c978fd07ef/best-affordable-camera-for-wildlife-photography.JPG?format=1500w'} 
+          {...console.log(selectedVariant.picture_url)}
           alt={product.name} 
           className='w-[95%] h-auto mb-3 rounded-lg' // Use 'rounded-lg' for rounded corners
         />
@@ -145,7 +152,7 @@ const ProductDetails = () => {
           <p className='mt-4'>{product.description}</p>
 
           {/* Display SKU input for testing */}
-          <div className='mt-4'>
+          {/* <div className='mt-4'>
             <input 
               type="text" 
               value={SKU} 
@@ -159,7 +166,7 @@ const ProductDetails = () => {
             >
               Test SKU
             </button>
-          </div>
+          </div> */}
 
           {/* Display selected variant price */}
           <p className='mt-4 text-2xl font-semibold'>

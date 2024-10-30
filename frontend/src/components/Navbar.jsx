@@ -10,6 +10,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState(""); 
   const [error, setError] = useState(null);
   const navigate = useNavigate(); 
+  const token = localStorage.getItem('token');
 
   const userId = 1;
 
@@ -19,14 +20,14 @@ const Navbar = () => {
 
   const fetchCartCount = async () => {
     // Created token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('No token found. Redirecting to login...');
-      navigate('/Login');
-      return;
-    }
+    // if (!token) {
+    //   console.log('No token found. Redirecting to login...');
+    //   navigate('/Login');
+    //   return;
+    // }
     console.log('Token:', token);
     try {
+      if(token){
       const response = await fetch(`http://localhost:3001/cartCount`, {
         method: 'GET',
         headers: {
@@ -35,6 +36,10 @@ const Navbar = () => {
       });
       const data = await response.json();
       setCartCount(data.cartCount);
+      }
+      else{
+        console.log('You are not logged in');
+      }
     } catch (error) {
       setError('Error fetching cart count. Please try again.');
       console.error('Error fetching cart count:', error);
@@ -44,14 +49,8 @@ const Navbar = () => {
   // Function to handle search
   // Function to handle search
   const handleSearch = () => {
-    const foundProduct = productsItems.find(
-      (item) => item.type.toLowerCase() === searchQuery.toLowerCase() 
-    );
-    if (foundProduct) {
-      navigate(`/product1/${foundProduct.categoryId}`); 
-    } else {
-      navigate("/NotFound");
-    }
+    console.log(searchQuery);
+    navigate(`/ProductSearchResults?searchQuery=${searchQuery}`); 
     setSearchQuery("");
   };
   
@@ -91,7 +90,9 @@ const Navbar = () => {
                 onClick={handleSearch} 
               ></i>
             </div>
+            { token ? <Link to='/Login' className='hidden sm:block hover:text-indigo-400'>Logout</Link> :
             <Link to='/Login' className='hidden sm:block hover:text-indigo-400'>Login</Link>
+            }
           </div>
 
           {/* Cart Icon */}
@@ -99,9 +100,12 @@ const Navbar = () => {
             <Link to='/Cart'>
               <i className="fa-solid fa-cart-shopping text-2xl"></i> {/* Cart icon */}
             </Link>
+            {/* Cart count */}
+            { token ?
             <span className='absolute -top-1 -right-1 inline-flex items-center justify-center px-1 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full'>
             {cartCount}
-            </span>
+            </span> : <span></span>
+            }
           </div>
 
           {/* Profile Icon */}

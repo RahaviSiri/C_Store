@@ -25,6 +25,14 @@ exports.getVariants = async (req, res) => {
     }
 }
 
-exports.getProduct2 = async (req, res) => {
-    
+exports.searchProducts = async (req, res) => {
+    const {searchPrompt} = req.body;
+    console.log(searchPrompt);
+    try {
+        const products = await productService.searchProducts(searchPrompt);
+        console.log(products);
+        res.status(201).json({message: 'Products Fetched', products});
+    } catch (error) {
+        res.status(401).json({ message: 'Failed to fetch the products', error: error.message });
+    }
 }

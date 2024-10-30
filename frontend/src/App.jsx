@@ -17,7 +17,11 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 import Product1 from './products/Product1';
+import ProductSearchResults from './products/ProductSearchResults';
+// import Order_history from './pages/Order_history';
+
 import OrderHistory from './pages/OrderHistory';
+
 import Checkout from './pages/Checkout';
 // import searchResults from './pages/searchResults';
 
@@ -35,11 +39,14 @@ const App = () => {
         <Route path='/Login' element={<Login />} />
         <Route path='/Place_order' element={<PlaceOrder />} /> 
         <Route path='/Product1/:id' element={<Product1/>} />
-        <Route path='/productDetails/:id' element={<ProductDetails/>} /> 
+        <Route path='/productDetails' element={<ProductDetails/>} /> 
         <Route path='/Order' element={<Order />} />
         <Route path='/Profile' element={<Profile />} />
         <Route path='/NotFound' element={<NotFound/>}/>
         <Route path='/checkout' element={<Checkout/>}/>
+
+        <Route path='/ProductSearchResults' element={<ProductSearchResults />} />
+        {/* <Route path='/Order_history' element={<Order_history/>}/> */}
         <Route path='/OrderHistory' element={<OrderHistory/>}/> 
         {/* <Route path="/searchResults" element={<searchResults />} /> */}
       </Routes>

@@ -15,3 +15,12 @@ exports.getVariantsBySKU = async (SKU) => {
     const variants =rows[0].variants;
     return variants;
 }
+
+exports.searchProducts = async (searchPrompt) => {
+    console.log(searchPrompt);
+    const sqlsearch = 'SELECT searchProducts(?) AS products';
+    const [rows] = await db.execute(sqlsearch,[searchPrompt]);
+    console.log(rows[0]);
+    const products = rows[0].products;
+    return products;
+}
