@@ -27,7 +27,7 @@ const Product1 = () => {
 
   // Array of sold counts
   const soldCount = [23, 123, 78, 90];
-  const offers = ["Best Price in similar deals", "Extra 5% off with coins", "Get free shipping with coins"];
+  const offers = ["Best Price in similar deals", "Gets gifts by buying more things", "Contact us when have doubts"];
 
   // // Function to fetch and filter product data based on categoryId
   // const fetchProductData = async () => {
