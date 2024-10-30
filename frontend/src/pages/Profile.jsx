@@ -234,6 +234,7 @@ const Profile = () => {
   const navigateToOrderHistory = () => {
     navigate('/OrderHistory');
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundImage: `url(${assets.Login_bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -279,3 +280,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
