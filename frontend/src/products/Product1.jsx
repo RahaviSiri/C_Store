@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { assets } from '../../public/assets/assets';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams ,useNavigate} from 'react-router-dom';
 // import { productsItems } from '../../public/assets/assets2'; 
 import "./style.css"
 
 const Product1 = () => {
+  const navigate = useNavigate();
   const { id } = useParams();  
   const [productSet,setProductSet] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -66,13 +67,13 @@ const Product1 = () => {
               {/* Product Images */}
               <div className='mb-4 sm:mb-0'>
                 <img
-                  src={`/assets/${product.picture_url}`}
+                  src={`${product.picture_url}`}
                   alt={`Image of ${product.product_name}`}
-                  className='w-full h-auto object-cover max-w-[200px] sm:max-w-[300px] md:max-w-[400px]'
+                  className='w-full h-auto object-cover max-w-[180px] sm:max-w-[200px] md:max-w-[220px]'
                 />
               </div>
 
-              <Link to={"/productdetails/" + product._id} className='flex-1 flex flex-col justify-between pl-2 sm:pl-4'>
+              <dev onClick = {() => navigate(`/productdetails?sku=${product.SKU}`)} className='flex-1 flex flex-col justify-between pl-2 sm:pl-4'>
                 {/* Product Info */}
                 <div className='flex flex-col gap-3'>
                   <h1 className='font-medium text-2xl mt-2'>{product.product_name}</h1>
@@ -91,7 +92,7 @@ const Product1 = () => {
                     <p className='text-red-600 animated-offer'>{randomSoldOffer}</p>
                   )}
                 </div>
-              </Link>
+              </dev>
             </div>
 
             {/* Horizontal line after each product */}
