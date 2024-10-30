@@ -1,34 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { assets } from '../../public/assets/assets';
 import { Link, useParams } from 'react-router-dom';
-import { productsItems } from '../../public/assets/assets2'; 
+// import { productsItems } from '../../public/assets/assets2'; 
 import "./style.css"
 
 const Product1 = () => {
-  const { id } = useParams();  // Destructure the id from useParams
+  const { id } = useParams();  
+  const [productSet,setProductSet] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProductSet = async () => {
+      try {
+        // Send categoryId as query parameter to backend
+        const response = await fetch(`http://localhost:3001/productSet?categoryId=${id}`);
+        const data = await response.json();
+        setProductSet(data);
+        setFilteredProducts(data);
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+    fetchProductSet();
+  }, [id]);
 
   // Array of sold counts
   const soldCount = [23, 123, 78, 90];
   const offers = ["Best Price in similar deals", "Extra 5% off with coins", "Get free shipping with coins"];
 
-  // Function to fetch and filter product data based on categoryId
-  const fetchProductData = async () => {
-    // Get the selected product based on the id from useParams
-    const selectedProduct = productsItems.find((product) => product.categoryId === id);
+  // // Function to fetch and filter product data based on categoryId
+  // const fetchProductData = async () => {
+  //   // Get the selected product based on the id from useParams
+  //   const selectedProduct = productsItems.find((product) => product.categoryId === id);
 
-    if (selectedProduct) {
-      // Filter products with the same categoryId as the selected product
-      const filtered = productsItems.filter(
-        (product) => product.categoryId === selectedProduct.categoryId
-      );
-      setFilteredProducts(filtered);
-    }
-  };
+  //   if (selectedProduct) {
+  //     // Filter products with the same categoryId as the selected product
+  //     const filtered = productsItems.filter(
+  //       (product) => product.categoryId === selectedProduct.categoryId
+  //     );
+  //     setFilteredProducts(filtered);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchProductData();
-  }, [id]);
+  // useEffect(() => {
+  //   fetchProductData();
+  // }, [id]);
 
   // Function to truncate description
   const truncateDescription = (description, maxLength = 100) => {
@@ -50,8 +66,8 @@ const Product1 = () => {
               {/* Product Images */}
               <div className='mb-4 sm:mb-0'>
                 <img
-                  src={product.image}
-                  alt={`Image of ${product.name}`}
+                  src={`/assets/${product.picture_url}`}
+                  alt={`Image of ${product.product_name}`}
                   className='w-full h-auto object-cover max-w-[200px] sm:max-w-[300px] md:max-w-[400px]'
                 />
               </div>
@@ -59,7 +75,7 @@ const Product1 = () => {
               <Link to={"/productdetails/" + product._id} className='flex-1 flex flex-col justify-between pl-2 sm:pl-4'>
                 {/* Product Info */}
                 <div className='flex flex-col gap-3'>
-                  <h1 className='font-medium text-2xl mt-2'>{product.name}</h1>
+                  <h1 className='font-medium text-2xl mt-2'>{product.product_name}</h1>
                   {/* Star Ratings */}
                   <div className='flex flex-row gap-2 my-1'>
                     <img src={assets.Star} alt="" className='w-3.5' /> 
