@@ -4,13 +4,14 @@ const orderHistoryService = require("../services/orderHistoryService");
 exports.orderHistory = async (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
+    
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
     }
 
     try {
         const id = await userService.getUserID(token);
-        const orderHistoryResponse = await orderHistoryService.orderHistoryFunct({ id });
+        const orderHistoryResponse = await orderHistoryService.getOrderHistory(id);
         res.status(200).json({ orderHistoryResponse });
     } catch (error) {
         console.error('Failed to fetch order history:', error);
@@ -19,14 +20,7 @@ exports.orderHistory = async (req, res) => {
 };
 
 exports.shipmentStatus = async (req, res) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
     try {
-        const id = await userService.getUserID(token);
         const message = await orderHistoryService.shipmentStatusFunct({ orderId: req.body.order_id });
         res.status(200).json({ message });
     } catch (error) {

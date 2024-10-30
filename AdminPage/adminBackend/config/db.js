@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Themiya1998',
+  password: 'AaaRa@24',
   database: 'cstore_db',
 });
 
