@@ -41,6 +41,35 @@ app.get("/productcategory", async (req, res) => {
   }
 });
 
+app.get("/productSet", async (req, res) => {
+  const { categoryId } = req.query; 
+  try {
+    const query = `
+      SELECT 
+          pb.SKU,
+          p.name AS product_name,
+          p.description,
+          pv.color,
+          pv.price,
+          pv.picture_url
+      FROM 
+          product_belongs_to pb
+      JOIN 
+          product p ON pb.SKU = p.SKU
+      JOIN 
+          variant pv ON pb.SKU = pv.SKU
+      WHERE 
+          pb.category_id = ?;
+    `;
+    const [result] = await db.query(query, [categoryId]);
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error." });
+  }
+});
+
+
 // Route setup
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
