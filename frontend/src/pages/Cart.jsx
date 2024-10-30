@@ -25,6 +25,9 @@ const Cart = () => {
     }
 
     try {
+      if (!token) {
+        return;
+      }
       setLoading(true);
       const response = await axios.post('http://localhost:3001/getCartItems', { token });
       const { cartItems, cart_id , cart_total} = response.data; // Assuming this structure from the response
