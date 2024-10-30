@@ -1,92 +1,129 @@
-//Home.jsx
-import { useState, useEffect } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ImageSwitcher from '../components/ImageSwithcher';  
 import Card from '../components/Card';
-// import { productsItems } from '../../public/assets/assets2';
-
-const images = [
-  '/1.jpg',
-  '/iphone.webp',
-  '/mac2.webp',
-  '/car.jpg',
-  '/teddy.jpeg',
-];
 
 const Home = () => {
+  const [productCategories, setProductCategories] = useState([]);
 
-  const [categories, setCategories] = useState([]);
-
+  // Fetch data from the backend API
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3001/productcategory');
+        const response = await fetch('http://localhost:3000/productcategory'); // Adjust the URL if necessary
         const data = await response.json();
-        setCategories(data); // Set the categories directly
+        setProductCategories(data);
       } catch (error) {
-        console.error('Error fetching category data:', error);
+        console.error("Error fetching product data:", error);
       }
     };
-
-    fetchCategories();
+    
+    fetchProducts();
   }, []);
 
-  // Filter to display only specific categories by ID
-  const specificCategoryIds = ['1', '10', '3',"8",'6','5']; // Adjust these IDs as needed
-  const filteredCategories = categories.filter(category =>
-    specificCategoryIds.includes(category.category_id.toString())
-  );
-
   return (
-    <div className='flex flex-col'>
+    <div className="flex flex-col">
       {/* Hero Section */}
-      <section className='hero bg-purple-300 text-white py-12 md:py-16 text-center'>
-        <h1 className='text-2xl md:text-5xl font-extrabold mb-4'>Welcome to C-Store</h1>
-        <p className='text-base font-bold md:text-lg mb-6'>Explore the best in electronics and toys!</p>
-        <Link to="/ProductCategory">
-          <button className='bg-purple-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-medium hover:bg-purple-700 transition duration-300'>
-            Shop Now
-          </button>
-        </Link>
+      <section className="flex flex-col md:flex-row items-center justify-between p-6">
+        {/* Text Section */}
+        <div className="md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left">
+        <div className="flex items-center mb-2">
+            <p className="text-lg font-semibold">Electronics & Toys Store</p>
+            <div className="w-10 h-1 bg-black ml-2"></div>
+        </div>
+          <h1 className="text-3xl md:text-5xl font-extrabold mb-6">
+            Where Shopping Meets Convenience
+          </h1>
+          <p className="text-base font-light mb-8">
+            Browse our collection of cutting-edge electronics, from smartphones to home gadgets, built for the future.
+          </p>
+          <Link to="/ProductCategory">
+            <button className="border border-black text-black px-4 py-2 md:px-6 md:py-3 rounded-full font-medium hover:bg-black hover:text-white">
+              Shop Now
+            </button>
+          </Link>
+        </div>
+
+        {/* Image Section */}
+        <div className="md:w-1/2 relative flex justify-center items-center">
+          {/* Background Circles */}
+          <img src="/assets/grey-circle.png" alt="Grey Circle" className="absolute w-2/3 h-auto z-0" />
+          <img src="/assets/orange-circle.png" alt="Orange Circle" className="absolute w-1/2 h-auto z-0" />
+
+          {/* Foreground Image */}
+          <img src="/assets/HomePage.png" alt="Stationery" className="relative z-10 w-[70%] h-auto" />
+        </div>
       </section>
-      
-      {/* Promotions Section */}
-      <div className='promotions my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4'>
-        {['New Arrivals', 'Best Sellers', 'Special Offers'].map((title, index) => (
-          <div 
-            key={index} 
-            className='bg-gradient-to-r from-purple-400 via-pink-500 to-pink-600 p-4 md:p-6 rounded-lg text-center hover:scale-105 transition-transform duration-300'>
-            <h2 className='text-lg md:text-xl font-semibold mb-2 text-white'>{title}</h2>
-            <p className='text-sm md:text-base text-white'>Check out the latest products in our collection.</p>
-          </div>
-        ))}
-      </div>
 
       {/* Featured Products Section */}
-      <div className='flex flex-col items-center mb-6 md:mb-12 px-4'>
-        <h2 className='text-xl md:text-2xl font-bold text-center text-purple-500 mb-4 md:mb-6'>Featured Products</h2>
+      <div className="flex flex-col items-center my-8 px-6 mb-10">
+        <h2 className="text-xl md:text-2xl font-bold text-center mb-8">FEATURED PRODUCTS</h2>
         
-        {/* ImageSwitcher - Add max width for responsiveness */}
-        <div className='w-full max-w-4xl mb-4 md:mb-6'>
-          <ImageSwitcher images={images} />
-        </div>
-        
-        {/* Product Cards - Responsive grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {filteredCategories.map((product, index) => (
-            <Card 
-              key={index} 
-              itemName={product.name} 
-              details={"Good Product"} 
-              // price={product.price} 
-              image={product.image_url} 
-            />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {productCategories.slice(0, 4).map((product, index) => (
+            <div key={index} className="relative border rounded-md overflow-hidden shadow-md">
+              {/* Product Image */}
+              <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+              
+              {/* Product Details */}
+              <div className="p-4">
+                <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+
+                {/* Price Box with Add to Cart Icon */}
+                <div className="relative mb-2">
+                  <div className="bg-black text-white text-center rounded-md p-2">
+                    <span>{`$${product.price.toFixed(2)}`}</span>
+                    <div className="absolute top-1 right-1 flex items-center cursor-pointer hover:bg-gray-800 rounded-full p-1">
+                      <i className="fa-solid fa-cart-shopping text-white text-sm"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-600">Top-tier electronics for your needs.</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
+
+      {/* Features Section */}
+      <h2 className="text-xl md:text-2xl font-bold text-center mb-0">WHY SHOP WITH US?</h2>
+      <section className="my-8 bg-gray-100 py-6">
+        <div className="flex justify-evenly items-center text-center">
+          <div>
+            <p className="font-bold">🚚 Free Shipping</p>
+            <p className="text-sm">For selected products</p>
+          </div>
+          <div>
+            <p className="font-bold">🔄 Easy Returns</p>
+            <p className="text-sm">Hassle-free 30-day returns</p>
+          </div>
+          <div>
+            <p className="font-bold">📦 Same Day Delivery</p>
+            <p className="text-sm">Around the Texas Localhood</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="my-12 px-6">
+        <h2 className="text-xl md:text-2xl font-bold text-center mb-6">GLIMPSE AT OUR CUSTOMER REVIEWS</h2>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+          <div className="bg-gray-100 p-6 rounded-md shadow-md max-w-sm">
+            <p className="italic">"Great product quality and super fast delivery"</p>
+            <span className="block mt-4 font-semibold">- Andrew McDonald</span>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-md shadow-md max-w-sm">
+            <p className="italic">"Excellent customer service and the best prices"</p>
+            <span className="block mt-4 font-semibold">- Jamie Smith</span>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-md shadow-md max-w-sm">
+            <p className="italic">"Awesome user experience with a user-friendly web page"</p>
+            <span className="block mt-4 font-semibold">- Sarah Watson</span>
+          </div>
+        </div>
+      </section>
     </div>
   );
-}
+};
 
 export default Home;
