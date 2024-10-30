@@ -11,7 +11,7 @@ const db = require('./config/db');
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: 'http://localhost:5176', 
+  origin: 'http://localhost:5173', 
   credentials: true 
 };
 
