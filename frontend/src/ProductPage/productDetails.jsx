@@ -7,7 +7,7 @@ import axios from 'axios';
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { currency, productsItems } = useContext(ShopContext);
+  const { currency } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [variants, setVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null); // Selected variant state

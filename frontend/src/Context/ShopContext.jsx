@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { productsItems } from "../../public/assets/assets2";
 
 export const ShopContext = createContext();
 
@@ -10,7 +9,6 @@ const ShopContextProvider = (props) => {
         // products,
         currency,
         delivery_fee,
-        productsItems,
     };
 
     return (
