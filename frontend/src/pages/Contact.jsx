@@ -88,14 +88,14 @@ const Contact = () => {
         <div className='bg-gray-100 p-6 md:p-8 rounded-lg shadow-lg shadow-black w-full md:w-2/3'>
           <h3 className='text-2xl font-semibold mb-4 text-center'>Get in Touch</h3>
           <form className='flex flex-col gap-6' onSubmit={handleSubmit}>
-            <input 
+            {/* <input 
               type='text' 
               placeholder='Your Name' 
               className='p-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500'
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-            />
+            /> */}
             <input 
               type='text' 
               placeholder='Subject' 
