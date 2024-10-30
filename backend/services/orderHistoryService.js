@@ -2,13 +2,27 @@ const db = require('../config/db');
 
 exports.getOrderHistory = async (id) => {
     const query = `
-        SELECT o.order_id, o.order_date, p.name AS product_name, oi.quantity, v.SKU, v.color, v.picture_url, s.shipment_status 
-        FROM orders o
-        JOIN order_item oi ON o.order_id = oi.order_id
-        JOIN variant v ON oi.SKU = v.SKU
-        JOIN product p ON v.SKU = p.SKU
-        JOIN shipment s ON o.shipment_id = s.shipment_id
-        WHERE o.customer_id = ?;
+        SELECT 
+            o.order_id, 
+            o.order_date, 
+            p.name AS product_name, 
+            oi.quantity, 
+            v.SKU, 
+            v.color, 
+            v.picture_url, 
+            s.shipment_status 
+        FROM 
+            orders o
+        JOIN 
+            order_item oi ON o.order_id = oi.order_id
+        JOIN 
+            variant v ON oi.variant_id = v.variant_id  -- Using variant_id instead of SKU
+        JOIN 
+            product p ON v.SKU = p.SKU
+        JOIN 
+            shipment s ON o.shipment_id = s.shipment_id
+        WHERE 
+            o.customer_id = ?;
     `;
 
     try {
