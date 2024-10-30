@@ -11,12 +11,7 @@ exports.getProductInterestTrend = (req, res) => {
 };
 
 exports.getMostSellingCategory = (req, res) => {
-  const sql = `
-    SELECT p.SKU, p.name, SUM(oi.quantity) AS total_quantity
-    FROM order_item oi
-    INNER JOIN product p ON oi.SKU = p.SKU
-    GROUP BY p.SKU, p.name
-    ORDER BY total_quantity DESC`;
+  const sql = `SELECT * FROM MostSellingCategory`;
 
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: 'Database query failed' });

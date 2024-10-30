@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Navbar from './Navbar'; 
-import './CustomerOrderReport.css'; // Import the CSS file
 
-const CustomerOrderReport = () => {
+const CustomerOrders = () => {
+  const { customerId } = useParams(); // Get customerId from URL parameters
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all orders from the backend API
-    axios.get('http://localhost:8081/api/orders')
+    // Fetch all orders for the specific customer
+    axios.get(`http://localhost:8080/api/orders?customerId=${customerId}`)
       .then((response) => {
         setOrders(response.data);
       })
@@ -19,19 +18,16 @@ const CustomerOrderReport = () => {
         console.error('Error fetching customer orders', error);
         setError('Error fetching customer orders');
       });
-  }, []);
+  }, [customerId]);
 
-  // Function to navigate to the CustomerOrders page
-  const handleExploreCustomer = (customerId) => {
-    navigate(`/customer-orders/${customerId}`); // Navigate to customer orders page
-  };
+  
 
   return (
-    <div className="container">
+    <div>
       <Navbar/>
-      <h1>Customer Order Report</h1>
+      <h1>Orders for Customer {customerId}</h1>
       {error ? (
-        <p className="error-message">{error}</p>
+        <p>{error}</p>
       ) : (
         <table>
           <thead>
@@ -39,10 +35,8 @@ const CustomerOrderReport = () => {
               <th>Order ID</th>
               <th>Order Date</th>
               <th>Total Price</th>
-              <th>Customer ID</th>
               <th>Payment ID</th>
               <th>Shipment ID</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -52,17 +46,13 @@ const CustomerOrderReport = () => {
                   <td>{order.order_id}</td>
                   <td>{new Date(order.order_date).toLocaleDateString()}</td>
                   <td>{order.total_price}</td>
-                  <td>{order.customer_id}</td>
                   <td>{order.payment_id}</td>
                   <td>{order.shipment_id}</td>
-                  <td>
-                    <button onClick={() => handleExploreCustomer(order.customer_id)}>Explore Customer</button>
-                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="no-orders">No orders found</td>
+                <td colSpan="5">No orders found for this customer</td>
               </tr>
             )}
           </tbody>
@@ -72,4 +62,4 @@ const CustomerOrderReport = () => {
   );
 };
 
-export default CustomerOrderReport;
+export default CustomerOrders;

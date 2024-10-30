@@ -10,7 +10,7 @@ const MessagesList = () => {
 
   // Fetch messages from the backend
   useEffect(() => {
-    axios.get('http://localhost:8081/api/messages') // Use Axios to fetch messages
+    axios.get('http://localhost:8080/api/messages') // Use Axios to fetch messages
       .then(response => {
         setMessages(response.data);
       })

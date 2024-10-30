@@ -18,7 +18,7 @@ const TopSellingproduct = () => {
     setLoading(true);
     setError(null); // Reset any previous errors
 
-    fetch(`http://localhost:8081/api/top-selling-product?start_date=${startDate}&end_date=${endDate}`)
+    fetch(`http://localhost:8080/api/top-selling-product?start_date=${startDate}&end_date=${endDate}`)
       .then((response) => {
         console.log('API response:', response); // Log the entire response object
         if (!response.ok) {

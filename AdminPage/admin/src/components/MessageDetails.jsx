@@ -12,7 +12,7 @@ const MessageDetails = () => {
 
   // Fetch the message when the component loads
   useEffect(() => {
-    axios.get(`http://localhost:8081/api/messages/${id}`)
+    axios.get(`http://localhost:8080/api/messages/${id}`)
       .then((response) => {
         setMessage(response.data);
       })

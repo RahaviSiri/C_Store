@@ -8,7 +8,7 @@ const ProductCategoryWithMostOrders = () => {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch('http://localhost:8081/api/most-selling-category')
+    fetch('http://localhost:8080/api/most-selling-category')
       .then((response) => {
         console.log('API response:', response); // Log the entire response object
         if (!response.ok) {

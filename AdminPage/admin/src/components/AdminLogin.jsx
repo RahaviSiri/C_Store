@@ -11,7 +11,7 @@ const AdminLogin = ({ onLogin }) => {
     e.preventDefault();
     // Check credentials
     if (username === 'admin' && password === 'password') {
-      onLogin(); // Call this to update login state in App.js
+      onLogin(); // Update login state in App.js
       navigate('/home'); // Navigate to home after successful login
     } else {
       alert('Invalid credentials');
@@ -49,9 +49,6 @@ const AdminLogin = ({ onLogin }) => {
               <input type="checkbox" />
               Remember me
             </label>
-            <a href="#" className="forgot-password">
-              Forgot Password?
-            </a>
           </div>
           <button type="submit" className="login-btn">
             <i className="fas fa-paper-plane"></i> Submit

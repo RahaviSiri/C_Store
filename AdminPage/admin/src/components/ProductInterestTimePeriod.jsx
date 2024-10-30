@@ -25,7 +25,7 @@ const ProductInterestTimePeriod = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8081/api/product-interest-trend?sku=${sku}&year=${year}`);
+        const response = await fetch(`http://localhost:8080/api/product-interest-trend?sku=${sku}&year=${year}`);
         
         if (!response.ok) {
           throw new Error('Network response was not ok');
