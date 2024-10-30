@@ -9,7 +9,7 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const Params = new URLSearchParams(location.search);
-  const { currency, productsItems } = useContext(ShopContext);
+  //const { currency, productsItems } = useContext(ShopContext);
 
   const { currency } = useContext(ShopContext);
 
